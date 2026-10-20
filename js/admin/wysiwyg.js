@@ -1,7 +1,5 @@
-// WYSIWYG CMS Controller for BRICEMG - Left Sidebar Edition
-
 (function () {
-  const { ADMIN_SECRET, getContent, saveContent, applyTheme, isAuthenticated, setAuthenticated } = window.storageUtils;
+  const { ADMIN_SECRET, getContent, saveContent, exportContentJSON, applyTheme, isAuthenticated, setAuthenticated } = window.storageUtils;
   const { buildPageHTML } = window.templates;
   const { CanvasAnimation } = window;
 
@@ -10,22 +8,19 @@
   let isPreviewMode = false;
   let wasCollapsedBeforePreview = false;
 
-  // DOM Elements
   const authPanel = document.getElementById('authPanel');
   const cmsContainer = document.getElementById('cmsContainer');
   const secretInput = document.getElementById('secret');
   const loginBtn = document.getElementById('loginBtn');
   const appEl = document.getElementById('app');
-
   const cmsSidebar = document.getElementById('cmsSidebar');
   const cmsWorkspace = document.getElementById('cmsWorkspace');
   const collapseSidebarBtn = document.getElementById('collapseSidebarBtn');
   const expandSidebarBtn = document.getElementById('expandSidebarBtn');
-
   const saveBtn = document.getElementById('saveBtn');
+  const exportBtn = document.getElementById('exportBtn');
   const resetBtn = document.getElementById('resetBtn');
   const togglePreviewBtn = document.getElementById('togglePreviewBtn');
-
   const confirmModal = document.getElementById('confirmModal');
   const confirmTitle = document.getElementById('confirmTitle');
   const confirmText = document.getElementById('confirmText');
@@ -33,19 +28,16 @@
   const confirmActionBtn = document.getElementById('confirmActionBtn');
   const cmsToast = document.getElementById('cmsToast');
 
-  // Initialize
-  function init() {
-    currentContent = getContent();
+  async function init() {
+    currentContent = await getContent();
     if (applyTheme && currentContent.theme) {
       applyTheme(currentContent.theme);
     }
-
     if (isAuthenticated()) {
       showCMS();
     } else {
       showAuth();
     }
-
     setupAuthListeners();
     setupSidebarToggleListeners();
     setupActionsListeners();
@@ -89,7 +81,7 @@
 
   function showToast(message) {
     if (!cmsToast) return;
-    cmsToast.textContent = message || '✓ Enregistré avec succès';
+    cmsToast.textContent = message || 'Enregistré avec succès';
     cmsToast.classList.add('is-shown');
     setTimeout(() => {
       cmsToast.classList.remove('is-shown');
@@ -108,7 +100,6 @@
     confirmCallback = null;
   }
 
-  // Auth
   function setupAuthListeners() {
     loginBtn.addEventListener('click', () => {
       const val = secretInput.value.trim();
@@ -119,13 +110,11 @@
         alert('Clé incorrecte.');
       }
     });
-
     secretInput.addEventListener('keypress', (e) => {
       if (e.key === 'Enter') loginBtn.click();
     });
   }
 
-  // Sidebar Collapse / Expand
   function collapseSidebar() {
     cmsSidebar.classList.add('is-collapsed');
     cmsWorkspace.classList.add('is-expanded');
@@ -142,12 +131,10 @@
     collapseSidebarBtn.addEventListener('click', collapseSidebar);
     expandSidebarBtn.addEventListener('click', () => {
       if (isPreviewMode) {
-        // Exit preview when expanding
         togglePreviewBtn.click();
       }
       expandSidebar();
     });
-
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
         closeConfirmModal();
@@ -155,23 +142,31 @@
     });
   }
 
-  // Section 1: Actions
   function setupActionsListeners() {
-    // Save
     saveBtn.addEventListener('click', () => {
       syncSidebarToContent();
       if (saveContent(currentContent)) {
-        showToast('✓ Modifications enregistrées avec succès !');
+        showToast('Modifications enregistrées localement !');
       } else {
         alert('Erreur lors de la sauvegarde.');
       }
     });
 
-    // Reset
+    if (exportBtn) {
+      exportBtn.addEventListener('click', () => {
+        syncSidebarToContent();
+        if (exportContentJSON(currentContent)) {
+          showToast('Fichier content.json téléchargé !');
+        } else {
+          alert('Erreur lors de l\'exportation.');
+        }
+      });
+    }
+
     resetBtn.addEventListener('click', () => {
       showConfirmModal(
         'RÉINITIALISER TOUT LE SITE ?',
-        'Cette action remplacera toutes les sections, cartes et couleurs personnalisées par le contenu par défaut d’origine.',
+        'Cette action réinitialisera les modifications locales.',
         () => {
           localStorage.removeItem(window.storageUtils.STORAGE_KEY);
           location.reload();
@@ -179,20 +174,19 @@
       );
     });
 
-    // Toggle Preview
     togglePreviewBtn.addEventListener('click', () => {
       isPreviewMode = !isPreviewMode;
       if (isPreviewMode) {
         wasCollapsedBeforePreview = cmsSidebar.classList.contains('is-collapsed');
         collapseSidebar();
         document.body.classList.add('cms-preview-mode');
-        togglePreviewBtn.textContent = '✎ Mode Édition';
+        togglePreviewBtn.textContent = 'Mode Édition';
         togglePreviewBtn.classList.add('active');
         expandSidebarBtn.querySelector('span:last-child').textContent = 'QUITTER APERÇU';
         showToast('Mode Aperçu activé');
       } else {
         document.body.classList.remove('cms-preview-mode');
-        togglePreviewBtn.textContent = '👁 Aperçu Direct';
+        togglePreviewBtn.textContent = 'Aperçu Direct';
         togglePreviewBtn.classList.remove('active');
         expandSidebarBtn.querySelector('span:last-child').textContent = 'MENU CMS';
         if (!wasCollapsedBeforePreview) {
@@ -203,7 +197,6 @@
     });
   }
 
-  // Section 2: Couleur du thème & Section 3: Information du site
   const THEME_PRESETS = (window.adminForm && window.adminForm.THEME_PRESETS) || {
     default: { bg: '#e3e3e3', cell: '#f0f0f0', border: '#d8d8d8', text: '#2e2e2e', textSoft: '#585858', textFaint: '#9b9b9b', accent: '#d71921' },
     dark: { bg: '#0e0e0e', cell: '#181818', border: '#292929', text: '#e0e0e0', textSoft: '#a0a0a0', textFaint: '#666666', accent: '#ff3b30' },
@@ -264,8 +257,7 @@
     if (aboutEl) aboutEl.value = site.about || '';
     if (emailEl) emailEl.value = site.email || 'bonjour@bricemg.dev';
 
-    // Plates F, G, H
-    const plates = currentContent.plates || (window.defaultContent && window.defaultContent.plates) || [];
+    const plates = currentContent.plates || [];
     const pF = plates[0] || {};
     const pG = plates[1] || {};
     const pH = plates[2] || {};
@@ -274,23 +266,22 @@
     const pFText1 = document.getElementById('plateFText1');
     const pFText2 = document.getElementById('plateFText2');
     if (pFLabel) pFLabel.value = pF.label || 'INFO';
-    if (pFText1) pFText1.value = pF.items?.[0]?.desc || "CRÉATION D'UNE BASE VISUELLE ET D'UNE PREMIÈRE VERSION D'EXPOSITION.";
-    if (pFText2) pFText2.value = pF.items?.[1]?.desc || 'DESIGN, DÉVELOPPEMENT, EXPÉRIMENTATION ET STORYTELLING.';
+    if (pFText1) pFText1.value = pF.items?.[0]?.desc || '';
+    if (pFText2) pFText2.value = pF.items?.[1]?.desc || '';
 
     const pGLabel = document.getElementById('plateGLabel');
     const pGText1 = document.getElementById('plateGText1');
     const pGText2 = document.getElementById('plateGText2');
     if (pGLabel) pGLabel.value = pG.label || 'APPROCHE';
-    if (pGText1) pGText1.value = pG.items?.[0]?.desc || 'CLARTÉ, RÉPÉTITION, RYTHME, STRUCTURE ET PLAINES DE COULEUR.';
-    if (pGText2) pGText2.value = pG.items?.[1]?.desc || 'MINIMAL, CALME, MODERNE, UN PEU TECHNIQUE ET CURIEUX.';
+    if (pGText1) pGText1.value = pG.items?.[0]?.desc || '';
+    if (pGText2) pGText2.value = pG.items?.[1]?.desc || '';
 
     const pHLabel = document.getElementById('plateHLabel');
     const pHText = document.getElementById('plateHText');
     if (pHLabel) pHLabel.value = pH.label || 'CONTACT';
-    if (pHText) pHText.value = pH.text || 'POUR UN PROJET, UNE COLLABORATION, OU UNE DISCUSSION.';
+    if (pHText) pHText.value = pH.text || '';
 
-    // Footer
-    const footer = currentContent.footer || (window.defaultContent && window.defaultContent.footer) || {};
+    const footer = currentContent.footer || {};
     const f1 = document.getElementById('footerCol1');
     const f2 = document.getElementById('footerCol2');
     const f3 = document.getElementById('footerCol3');
@@ -314,8 +305,7 @@
       email: document.getElementById('email')?.value.trim() || 'bonjour@bricemg.dev'
     };
 
-    // Sync Plates
-    currentContent.plates = currentContent.plates || JSON.parse(JSON.stringify(window.defaultContent.plates || []));
+    currentContent.plates = currentContent.plates || [];
     if (currentContent.plates[0]) {
       currentContent.plates[0].label = document.getElementById('plateFLabel')?.value.trim() || 'INFO';
       if (!currentContent.plates[0].items) currentContent.plates[0].items = [{ title: 'ÉTAT', desc: '' }, { title: 'FOCUS', desc: '' }];
@@ -333,7 +323,6 @@
       currentContent.plates[2].text = document.getElementById('plateHText')?.value.trim() || '';
     }
 
-    // Sync Footer
     currentContent.footer = {
       col1: document.getElementById('footerCol1')?.value.trim() || 'BRICEMG',
       col2: document.getElementById('footerCol2')?.value.trim() || 'DESIGN / CODE / VISION',
@@ -345,17 +334,14 @@
 
   function setupThemeAndSiteListeners() {
     const themeProps = ['Bg', 'Cell', 'Border', 'Text', 'TextSoft', 'TextFaint', 'Accent'];
-
     themeProps.forEach(prop => {
       const textInput = document.getElementById(`theme${prop}`);
       const pickerInput = document.getElementById(`theme${prop}Picker`);
-
       if (textInput && pickerInput) {
         pickerInput.addEventListener('input', () => {
           textInput.value = pickerInput.value;
           applyThemeFromSidebar();
         });
-
         textInput.addEventListener('input', () => {
           const hex = formatHex(textInput.value, null);
           if (hex) pickerInput.value = hex;
@@ -377,7 +363,7 @@
           syncColorInput('TextFaint', preset.textFaint || '#9b9b9b');
           syncColorInput('Accent', preset.accent);
           applyThemeFromSidebar();
-          showToast(`Palette « ${btn.textContent} » appliquée !`);
+          showToast(`Palette ${btn.textContent} appliquée !`);
         }
       });
     });
@@ -399,7 +385,6 @@
     });
   }
 
-  // Modal Listeners
   function setupModalListeners() {
     confirmCancelBtn.addEventListener('click', closeConfirmModal);
     confirmActionBtn.addEventListener('click', () => {
@@ -410,23 +395,18 @@
     });
   }
 
-  // App Event Delegation (WYSIWYG Card & Section interactions)
   function setupAppDelegation() {
-    // 1. Click actions
     appEl.addEventListener('click', (e) => {
       if (isPreviewMode) return;
-
       const target = e.target.closest('[data-action]');
       if (!target) return;
-
       const action = target.getAttribute('data-action');
       const secIdx = parseInt(target.getAttribute('data-sec-idx'), 10);
       const itemIdx = parseInt(target.getAttribute('data-item-idx'), 10);
-
-      const sections = currentContent.sections;
+      const sections = currentContent.sections || [];
       const currentSec = sections[secIdx];
 
-      // --- CARD ACTIONS ---
+      // --- ACTIONS CARTES ---
       if (action === 'move-card-prev') {
         if (!currentSec || itemIdx <= 0) return;
         const temp = currentSec.items[itemIdx];
@@ -449,7 +429,7 @@
         const cardTitle = currentSec.items[itemIdx].title || 'cette carte';
         showConfirmModal(
           'SUPPRIMER LA CARTE ?',
-          `Voulez-vous vraiment supprimer définitivement « ${cardTitle} » ?`,
+          `Voulez-vous vraiment supprimer définitivement "${cardTitle}" ?`,
           () => {
             currentSec.items.splice(itemIdx, 1);
             renderPage();
@@ -470,21 +450,8 @@
         currentSec.items.push(newItem);
         renderPage();
         showToast('Nouvelle carte ajoutée !');
-        setTimeout(() => {
-          const cards = document.querySelectorAll(`[data-sec-idx="${secIdx}"] .name.cms-editable`);
-          const last = cards[cards.length - 1];
-          if (last) {
-            last.focus();
-            const range = document.createRange();
-            range.selectNodeContents(last);
-            const sel = window.getSelection();
-            sel.removeAllRanges();
-            sel.addRange(range);
-          }
-        }, 50);
       }
-
-      // --- SECTION ACTIONS ---
+      // --- ACTIONS SECTIONS ---
       else if (action === 'move-sec-prev') {
         if (secIdx <= 0) return;
         const temp = sections[secIdx];
@@ -507,7 +474,7 @@
         const secTitle = currentSec.title || 'cette section';
         showConfirmModal(
           'SUPPRIMER LA SECTION ?',
-          `Voulez-vous vraiment supprimer la section « ${secTitle} » et toutes ses ${currentSec.items ? currentSec.items.length : 0} cartes ?`,
+          `Voulez-vous vraiment supprimer la section "${secTitle}" et toutes ses cartes ?`,
           () => {
             sections.splice(secIdx, 1);
             renderPage();
@@ -515,6 +482,7 @@
           }
         );
       } else if (action === 'add-section') {
+        // Calcule la lettre suivante (A=65, B=66, C=67...)
         const nextLetter = String.fromCharCode(65 + sections.length);
         const newSec = {
           id: 'sec_' + Date.now(),
@@ -539,31 +507,26 @@
       }
     });
 
-    // 2. Direct Content Editable Changes (inline editing)
+    // Édition directe inline
     appEl.addEventListener('input', (e) => {
       const target = e.target;
       if (!target.classList.contains('cms-editable')) return;
-
       const field = target.getAttribute('data-field');
       const action = target.getAttribute('data-action');
       const secIdx = parseInt(target.getAttribute('data-sec-idx'), 10);
       const itemIdx = parseInt(target.getAttribute('data-item-idx'), 10);
       const plateIdx = parseInt(target.getAttribute('data-plate-idx'), 10);
       const footerKey = target.getAttribute('data-footer-key');
-
       const val = target.innerText.trim();
 
-      // Footer
       if (footerKey) {
         currentContent.footer = currentContent.footer || {};
         currentContent.footer[footerKey] = val;
         const colNum = footerKey.replace('col', '');
         const inputEl = document.getElementById('footerCol' + colNum);
         if (inputEl) inputEl.value = val;
-      }
-      // Plates F, G, H
-      else if (!isNaN(plateIdx)) {
-        currentContent.plates = currentContent.plates || JSON.parse(JSON.stringify(window.defaultContent.plates || []));
+      } else if (!isNaN(plateIdx)) {
+        currentContent.plates = currentContent.plates || [];
         const plate = currentContent.plates[plateIdx];
         if (plate) {
           if (field === 'letter') plate.letter = val;
@@ -572,18 +535,15 @@
             const inputId = plateIdx === 0 ? 'plateFLabel' : (plateIdx === 1 ? 'plateGLabel' : 'plateHLabel');
             const labEl = document.getElementById(inputId);
             if (labEl) labEl.value = val;
-          }
-          else if (field === 'text') {
+          } else if (field === 'text') {
             plate.text = val;
             const txtEl = document.getElementById('plateHText');
             if (txtEl) txtEl.value = val;
-          }
-          else if (field === 'emailPrefix') plate.emailPrefix = val;
+          } else if (field === 'emailPrefix') plate.emailPrefix = val;
           else if (field === 'email') plate.email = val;
           else if (field === 'item-title') {
             if (plate.items && plate.items[itemIdx]) plate.items[itemIdx].title = val;
-          }
-          else if (field === 'item-desc') {
+          } else if (field === 'item-desc') {
             if (plate.items && plate.items[itemIdx]) {
               plate.items[itemIdx].desc = val;
               const inputId = plateIdx === 0 ? (itemIdx === 0 ? 'plateFText1' : 'plateFText2') : (itemIdx === 0 ? 'plateGText1' : 'plateGText2');
@@ -592,9 +552,7 @@
             }
           }
         }
-      }
-      // Sections & Cards
-      else if (action === 'edit-sec-letter') {
+      } else if (action === 'edit-sec-letter') {
         if (currentContent.sections[secIdx]) {
           currentContent.sections[secIdx].letter = val;
         }
@@ -611,6 +569,5 @@
     });
   }
 
-  // Run
   document.addEventListener('DOMContentLoaded', init);
 })();
