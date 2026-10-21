@@ -1,0 +1,275 @@
+{
+  "site": {
+    "title": "BRICEMG / STUDIO",
+    "subtitle": "DESIGN / CODE / VISION",
+    "heroClaim": "DES IDÉES QUI ONT UNE FORME, UNE VOIX ET UNE VITESSE.",
+    "intro": "Je crée des interfaces, des identités visuelles et des expériences web qui donnent du sens à une idée.",
+    "about": "Je conçois et développe des projets à la croisée du design, du produit et du code.",
+    "email": "bonjour@bricemg.dev"
+  },
+  "theme": {
+    "bgStart": "#161226",
+    "bgEnd": "#161226",
+    "bgAngle": "200deg",
+    "bg": "#161226",
+    "cellStart": "#161226",
+    "cellEnd": "#161226",
+    "cellAngle": "200deg",
+    "cell": "#161226",
+    "borderStart": "#161226",
+    "borderEnd": "#161226",
+    "borderAngle": "160deg",
+    "border": "#161226",
+    "text": "#dad8e4",
+    "textSoft": "#bd5528",
+    "textFaint": "#7b92b7",
+    "accent": "#e17f0e",
+    "fontDot": "'Doto', ui-monospace, monospace",
+    "fontMono": "'Inter', sans-serif",
+    "fontSize": "12px",
+    "textTransform": "uppercase",
+    "letterSpacing": "0.02em",
+    "borderRadius": "12px"
+  },
+  "sections": [
+    {
+      "id": "atelier",
+      "letter": "A",
+      "title": "ATELIER",
+      "visible": true,
+      "items": [
+        {
+          "id": "branding",
+          "title": "IDENTITÉ VISUELLE",
+          "code": "BRAND",
+          "desc": "Logo, charte graphique, guidelines, visual system.",
+          "type": "IDENTITÉ",
+          "status": "ACTIF",
+          "visible": true,
+          "image": "media/-nuage.png"
+        },
+        {
+          "id": "portfolio",
+          "title": "PORTFOLIO",
+          "code": "SHOWCASE",
+          "desc": "Présentation des réalisations, des projets et des compétences.",
+          "type": "CASE STUDIES",
+          "status": "ACTIF",
+          "visible": true,
+          "image": "media/-placeholder.png"
+        },
+        {
+          "id": "web",
+          "title": "SITE WEB",
+          "code": "WEB",
+          "desc": "Site vitrine, landing page, expériences interactives.",
+          "type": "PRODUCTION",
+          "status": "EN COURS",
+          "visible": true,
+          "image": "media/_nuage.png"
+        },
+        {
+          "id": "experiments",
+          "title": "EXPÉRIMENTATIONS",
+          "code": "CREATIVE CODE",
+          "desc": "Outils, interfaces, motion, génération graphique.",
+          "type": "R&D",
+          "status": "EXPLORATION",
+          "visible": true
+        },
+        {
+          "id": "card_1792513084677",
+          "title": "NOUVELLE CARTE",
+          "code": "CODE",
+          "desc": "Description du projet ou du service.",
+          "type": "IDENTITÉ",
+          "status": "ACTIF",
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "projets",
+      "letter": "B",
+      "title": "PROJETS",
+      "visible": true,
+      "items": [
+        {
+          "id": "saas",
+          "title": "SAAS / PRODUCT",
+          "code": "UX",
+          "desc": "Applications, tableaux de bord, flux de travail.",
+          "type": "SOFTWARE",
+          "status": "CONCEPTION",
+          "visible": true
+        },
+        {
+          "id": "motion",
+          "title": "MOTION / VISUAL",
+          "code": "MOTION",
+          "desc": "Animation, typographie, images en mouvement.",
+          "type": "MEDIA",
+          "status": "RÉALISATION",
+          "visible": true
+        },
+        {
+          "id": "consulting",
+          "title": "CONSEIL / DESIGN",
+          "code": "STRATÉGIE",
+          "desc": "Positionnement, UX, idéation et définition de solutions.",
+          "type": "ADVISORY",
+          "status": "DISCUSSION",
+          "visible": true
+        },
+        {
+          "id": "culture",
+          "title": "CULTURE / ÉVÈNEMENT",
+          "code": "PUBLISH",
+          "desc": "Visuel, communication, campagnes et trousse de présentation.",
+          "type": "ÉVÈNEMENT",
+          "status": "PLANIFICATION",
+          "visible": true
+        }
+      ]
+    }
+  ],
+  "plates": [
+    {
+      "id": "plate_f",
+      "letter": "F",
+      "label": "INFO",
+      "visible": true,
+      "items": [
+        {
+          "title": "ÉTAT",
+          "desc": "CRÉATION D'UNE BASE VISUELLE ET D'UNE PREMIÈRE VERSION D'EXPOSITION."
+        },
+        {
+          "title": "FOCUS",
+          "desc": "DESIGN, DÉVELOPPEMENT, EXPÉRIMENTATION ET STORYTELLING."
+        }
+      ]
+    },
+    {
+      "id": "plate_g",
+      "letter": "G",
+      "label": "APPROCHE",
+      "visible": true,
+      "items": [
+        {
+          "title": "PRINCIPE",
+          "desc": "CLARTÉ, RÉPÉTITION, RYTHME, STRUCTURE ET PLAINES DE COULEUR."
+        },
+        {
+          "title": "MOOD",
+          "desc": "MINIMAL, CALME, MODERNE, UN PEU TECHNIQUE ET CURIEUX."
+        }
+      ]
+    },
+    {
+      "id": "plate_h",
+      "letter": "H",
+      "label": "CONTACT",
+      "visible": true,
+      "hasDot": true,
+      "text": "POUR UN PROJET, UNE COLLABORATION, OU UNE DISCUSSION.",
+      "emailPrefix": "ÉCRIS À",
+      "email": "bonjour@bricemg.dev"
+    }
+  ],
+  "footer": {
+    "col1": "BRICEMG",
+    "col2": "DESIGN / CODE / VISION",
+    "col3": "DESIGN / CODE / VISION",
+    "col4": "bonjour@bricemg.dev",
+    "col5": "© 2026"
+  },
+  "cards": [
+    {
+      "id": "branding",
+      "title": "IDENTITÉ VISUELLE",
+      "code": "BRAND",
+      "desc": "Logo, charte graphique, guidelines, visual system.",
+      "type": "IDENTITÉ",
+      "status": "ACTIF",
+      "visible": true,
+      "image": "media/-nuage.png"
+    },
+    {
+      "id": "portfolio",
+      "title": "PORTFOLIO",
+      "code": "SHOWCASE",
+      "desc": "Présentation des réalisations, des projets et des compétences.",
+      "type": "CASE STUDIES",
+      "status": "ACTIF",
+      "visible": true,
+      "image": "media/-placeholder.png"
+    },
+    {
+      "id": "web",
+      "title": "SITE WEB",
+      "code": "WEB",
+      "desc": "Site vitrine, landing page, expériences interactives.",
+      "type": "PRODUCTION",
+      "status": "EN COURS",
+      "visible": true,
+      "image": "media/_nuage.png"
+    },
+    {
+      "id": "experiments",
+      "title": "EXPÉRIMENTATIONS",
+      "code": "CREATIVE CODE",
+      "desc": "Outils, interfaces, motion, génération graphique.",
+      "type": "R&D",
+      "status": "EXPLORATION",
+      "visible": true
+    },
+    {
+      "id": "card_1792513084677",
+      "title": "NOUVELLE CARTE",
+      "code": "CODE",
+      "desc": "Description du projet ou du service.",
+      "type": "IDENTITÉ",
+      "status": "ACTIF",
+      "visible": true
+    }
+  ],
+  "projects": [
+    {
+      "id": "saas",
+      "title": "SAAS / PRODUCT",
+      "code": "UX",
+      "desc": "Applications, tableaux de bord, flux de travail.",
+      "type": "SOFTWARE",
+      "status": "CONCEPTION",
+      "visible": true
+    },
+    {
+      "id": "motion",
+      "title": "MOTION / VISUAL",
+      "code": "MOTION",
+      "desc": "Animation, typographie, images en mouvement.",
+      "type": "MEDIA",
+      "status": "RÉALISATION",
+      "visible": true
+    },
+    {
+      "id": "consulting",
+      "title": "CONSEIL / DESIGN",
+      "code": "STRATÉGIE",
+      "desc": "Positionnement, UX, idéation et définition de solutions.",
+      "type": "ADVISORY",
+      "status": "DISCUSSION",
+      "visible": true
+    },
+    {
+      "id": "culture",
+      "title": "CULTURE / ÉVÈNEMENT",
+      "code": "PUBLISH",
+      "desc": "Visuel, communication, campagnes et trousse de présentation.",
+      "type": "ÉVÈNEMENT",
+      "status": "PLANIFICATION",
+      "visible": true
+    }
+  ]
+}
