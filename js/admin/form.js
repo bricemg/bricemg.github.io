@@ -20,6 +20,7 @@ function collectFormData(content) {
   next.theme.textSoft = document.getElementById('themeTextSoft').value.trim() || '#585858';
   next.theme.textFaint = document.getElementById('themeTextFaint').value.trim() || '#9b9b9b';
   next.theme.accent = document.getElementById('themeAccent').value.trim() || '#d71921';
+  next.theme.borderRadius = document.getElementById('themeBorderRadiusRange') ? `${document.getElementById('themeBorderRadiusRange').value}px` : '22px';
 
   // Collect all card fields
   const cardFields = ['title', 'code', 'desc', 'type', 'status'];
@@ -235,7 +236,13 @@ function fillThemeFields(theme) {
   syncColorInputs('Text', current.text || '#2e2e2e');
   syncColorInputs('TextSoft', current.textSoft || '#585858');
   syncColorInputs('TextFaint', current.textFaint || '#9b9b9b');
-  syncColorInputs('Accent', current.accent || '#d71921');
+  const radiusRange = document.getElementById('themeBorderRadiusRange');
+  const radiusVal = document.getElementById('themeBorderRadiusVal');
+  if (radiusRange && current.borderRadius) {
+    const num = parseInt(current.borderRadius, 10) || 22;
+    radiusRange.value = num;
+    if (radiusVal) radiusVal.textContent = `${num}px`;
+  }
   setupThemeListeners();
 }
 

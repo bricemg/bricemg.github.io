@@ -23,14 +23,18 @@ function getSectionsList(content) {
   ];
 }
 
-function buildCardVisitorHTML(card, index) {
+function buildCardVisitorHTML(card, index, secIdx) {
+  const imgSrc = card.image || 'media/_placeholder.png';
   return `
-    <a class="cell tool" data-tool="${sanitize(card.id)}" data-released="2026-10-05" href="#" target="_self">
+    <a class="cell tool" data-tool="${sanitize(card.id)}" data-card-id="${sanitize(card.id)}" data-sec-idx="${secIdx ?? ''}" data-item-idx="${index}" data-action="open-card-detail" href="javascript:void(0);" target="_self">
       <div class="cell-top">
         <span class="dot idx">${String(index + 1).padStart(2, '0')}</span>
         <span class="cue"></span>
       </div>
       <div class="name">${sanitize(card.title)}</div>
+      <div class="card-media">
+        <img src="${sanitize(imgSrc)}" alt="${sanitize(card.title)}" loading="lazy" />
+      </div>
       <div class="cell-body">
         <div class="meta">
           <span class="code">${sanitize(card.code)}</span>
@@ -40,7 +44,7 @@ function buildCardVisitorHTML(card, index) {
           <div><dt>TYPE</dt><dd>${sanitize(card.type)}</dd></div>
           <div><dt>STATUT</dt><dd>${sanitize(card.status || card.phase || 'ACTIF')}</dd></div>
         </dl>
-        <div class="go">VOIR<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3.5 8.5 8.5 3.5M4.5 3.5H8.5V7.5" fill="none" stroke="currentColor" stroke-width="1.4"/></svg></div>
+        <div class="go">VOIR EN DÉTAIL<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3.5 8.5 8.5 3.5M4.5 3.5H8.5V7.5" fill="none" stroke="currentColor" stroke-width="1.4"/></svg></div>
       </div>
     </a>
   `;
@@ -48,12 +52,14 @@ function buildCardVisitorHTML(card, index) {
 
 function buildCardEditableHTML(card, index, secIdx, totalCards) {
   const isHidden = card.visible === false;
+  const imgSrc = card._tempPreview || card.image || 'media/_placeholder.png';
   return `
     <div class="cell tool cms-card ${isHidden ? 'cms-card--hidden' : ''}" 
          data-sec-idx="${secIdx}" 
          data-item-idx="${index}" 
          data-item-id="${sanitize(card.id)}">
       <div class="cms-card-toolbar">
+        <button type="button" class="cms-tool-btn" data-action="open-card-detail" data-sec-idx="${secIdx}" data-item-idx="${index}" title="Ouvrir la vue détaillée & rédiger les notes">🔍 DÉTAILS</button>
         <button type="button" class="cms-tool-btn cms-btn-move-card" data-action="move-card-prev" data-sec-idx="${secIdx}" data-item-idx="${index}" title="Déplacer à gauche" ${index === 0 ? 'disabled' : ''}>◄</button>
         <button type="button" class="cms-tool-btn cms-btn-move-card" data-action="move-card-next" data-sec-idx="${secIdx}" data-item-idx="${index}" title="Déplacer à droite" ${index === totalCards - 1 ? 'disabled' : ''}>►</button>
         <button type="button" class="cms-tool-btn cms-btn-toggle-card ${isHidden ? 'is-off' : ''}" data-action="toggle-card-visibility" data-sec-idx="${secIdx}" data-item-idx="${index}">
@@ -66,6 +72,13 @@ function buildCardEditableHTML(card, index, secIdx, totalCards) {
         ${isHidden ? '<span class="cms-tag-hidden">MASQUÉ</span>' : '<span class="cue"></span>'}
       </div>
       <div class="name cms-editable" contenteditable="true" spellcheck="false" data-field="title" data-sec-idx="${secIdx}" data-item-idx="${index}">${sanitize(card.title)}</div>
+      <div class="card-media cms-card-media" data-action="edit-card-media" data-sec-idx="${secIdx}" data-item-idx="${index}" title="Cliquer pour changer l'image">
+        <img src="${sanitize(imgSrc)}" alt="${sanitize(card.title)}" loading="lazy" />
+        <div class="cms-media-overlay" data-action="edit-card-media" data-sec-idx="${secIdx}" data-item-idx="${index}">
+          <span class="cms-media-btn">📷 CHANGER L'IMAGE</span>
+          <span class="cms-media-badge">${sanitize(imgSrc)}</span>
+        </div>
+      </div>
       <div class="cell-body">
         <div class="meta">
           <span class="code cms-editable" contenteditable="true" spellcheck="false" data-field="code" data-sec-idx="${secIdx}" data-item-idx="${index}">${sanitize(card.code)}</span>
@@ -81,6 +94,7 @@ function buildCardEditableHTML(card, index, secIdx, totalCards) {
             <dd class="cms-editable" contenteditable="true" spellcheck="false" data-field="status" data-sec-idx="${secIdx}" data-item-idx="${index}">${sanitize(card.status || card.phase || 'ACTIF')}</dd>
           </div>
         </dl>
+        <div class="go cms-btn-detail-trigger" data-action="open-card-detail" data-sec-idx="${secIdx}" data-item-idx="${index}" style="cursor: pointer;">VOIR EN DÉTAIL<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3.5 8.5 8.5 3.5M4.5 3.5H8.5V7.5" fill="none" stroke="currentColor" stroke-width="1.4"/></svg></div>
       </div>
     </div>
   `;
@@ -177,7 +191,7 @@ function buildPageHTML(content, options = {}) {
           <span class="count">/ ${visibleItems.length}</span>
         </div>
         <div class="row">
-          ${visibleItems.map((card, idx) => buildCardVisitorHTML(card, idx)).join('')}
+          ${visibleItems.map((card, idx) => buildCardVisitorHTML(card, idx, secIdx)).join('')}
         </div>
       `;
     }
@@ -280,12 +294,65 @@ function buildPageHTML(content, options = {}) {
         <span>${sanitize(footer.col5 || '© 2026')}</span>
       </div>
     </div>
+    ${buildCardDetailModalHTML(isEditable)}
     ${!isEditable ? '<a href="admin.html" class="cms-link">CMS</a>' : ''}
+  `;
+}
+
+function buildCardDetailModalHTML(isEditable) {
+  return `
+    <div id="cardDetailModal" class="card-detail-backdrop" role="dialog" aria-modal="true" aria-hidden="true">
+      <div class="card-detail-dialog">
+        <div class="cell card-detail-card">
+          <button type="button" class="card-detail-close-btn" id="cardDetailCloseBtn" aria-label="Fermer la vue détaillée">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+
+          <div class="cell-top">
+            <div class="card-detail-index-wrap">
+              <span class="dot idx" id="detailCardIdx">01</span>
+              <span class="card-detail-cue"></span>
+            </div>
+            <div class="card-detail-tags">
+              <span class="card-detail-tag" id="detailCardType">IDENTITÉ</span>
+              <span class="card-detail-tag highlight" id="detailCardStatus">ACTIF</span>
+            </div>
+          </div>
+
+          <h2 class="card-detail-title ${isEditable ? 'cms-editable' : ''}" id="detailCardTitle" ${isEditable ? 'contenteditable="true" spellcheck="false" data-field="title"' : ''}>TITRE</h2>
+
+          <div class="card-detail-media">
+            <img id="detailCardImage" src="media/_placeholder.png" alt="Aperçu du projet" />
+          </div>
+
+          <div class="card-detail-meta-row">
+            <div class="card-detail-meta-item">
+              <span class="meta-label">CODE PROJET</span>
+              <span class="meta-val ${isEditable ? 'cms-editable' : ''}" id="detailCardCode" ${isEditable ? 'contenteditable="true" spellcheck="false" data-field="code"' : ''}>CODE</span>
+            </div>
+            <div class="card-detail-meta-item">
+              <span class="meta-label">SYNTHÈSE</span>
+              <span class="meta-val ${isEditable ? 'cms-editable' : ''}" id="detailCardDesc" ${isEditable ? 'contenteditable="true" spellcheck="false" data-field="desc"' : ''}>Description synthétique.</span>
+            </div>
+          </div>
+
+          <div class="card-detail-section-title">PRÉSENTATION DU PROJET & NOTES</div>
+          
+          <div class="card-detail-text ${isEditable ? 'cms-editable' : ''}" id="detailCardLongText" ${isEditable ? 'contenteditable="true" spellcheck="false" data-field="details"' : ''}>
+          </div>
+          ${isEditable ? '<div class="cms-card-edit-hint" style="text-align: left; margin-top: 8px;">✎ Les notes ci-dessus sont éditables directement au clavier et sauvegardées pour cette carte.</div>' : ''}
+        </div>
+      </div>
+    </div>
   `;
 }
 
 window.templates = {
   buildCardHTML: buildCardVisitorHTML,
   buildProjectHTML: buildCardVisitorHTML,
+  buildCardDetailModalHTML,
   buildPageHTML
 };

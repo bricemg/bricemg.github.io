@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Doto:wght@300;500;700;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Doto:wght@300;500;700;900&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Space+Mono:wght@400;700&family=Syne:wght@500;700;800&display=swap"
     rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="css/admin-sections.css" />
@@ -131,7 +131,70 @@
             <button type="button" class="preset-btn" data-preset="cyber">Matrix / Vert</button>
           </div>
         </div>
-        <!-- 3. INFORMATION DU SITE -->
+        <!-- 3. TYPOGRAPHIE DU SITE -->
+        <div class="cms-sidebar-section">
+          <div class="cms-sidebar-section-title">Typographie du site</div>
+          <div class="field">
+            <label for="themeFontDot">Police des titres & chiffres (Dot)</label>
+            <select id="themeFontDot" class="cms-select">
+              <option value="'Doto', ui-monospace, monospace">Doto (Matrice de points)</option>
+              <option value="'IBM Plex Mono', monospace">IBM Plex Mono (Technique)</option>
+              <option value="'Space Mono', monospace">Space Mono (Rétro-futuriste)</option>
+              <option value="'Syne', sans-serif">Syne (Design audacieux)</option>
+              <option value="'Inter', sans-serif">Inter (Moderne sans-serif)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="themeFontMono">Police du texte & corps</label>
+            <select id="themeFontMono" class="cms-select">
+              <option value="'IBM Plex Mono', ui-monospace, monospace">IBM Plex Mono (Défaut)</option>
+              <option value="'JetBrains Mono', monospace">JetBrains Mono (Précision)</option>
+              <option value="'Space Mono', monospace">Space Mono (Caractère)</option>
+              <option value="'Inter', sans-serif">Inter (Sans-serif fluide)</option>
+              <option value="ui-monospace, SFMono-Regular, monospace">Monospace Système</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="themeFontSize">Taille de base du texte</label>
+            <select id="themeFontSize" class="cms-select">
+              <option value="10px">10px — Très compact</option>
+              <option value="11px">11px — Compact</option>
+              <option value="12px" selected>12px — Standard (Défaut)</option>
+              <option value="13px">13px — Confort</option>
+              <option value="14px">14px — Grand</option>
+              <option value="15px">15px — Très grand</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="themeTextTransform">Casse du texte</label>
+            <select id="themeTextTransform" class="cms-select">
+              <option value="uppercase" selected>TOUT EN MAJUSCULES (Studio)</option>
+              <option value="none">Casse normale (Minuscules/Majuscules)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="themeLetterSpacing">Espacement des lettres</label>
+            <select id="themeLetterSpacing" class="cms-select">
+              <option value="0.005em">0.005em — Très serré</option>
+              <option value="0.01em">0.01em — Serré</option>
+              <option value="0.02em" selected>0.02em — Standard (Défaut)</option>
+              <option value="0.035em">0.035em — Aéré</option>
+              <option value="0.05em">0.05em — Très aéré</option>
+            </select>
+          </div>
+        </div>
+        <!-- 4. ARRONDI DES CARTES & SECTIONS -->
+        <div class="cms-sidebar-section">
+          <div class="cms-sidebar-section-title">Arrondi des cartes & sections</div>
+          <div class="field">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <label for="themeBorderRadiusRange" style="margin: 0;">Ajustement au pixel près</label>
+              <span id="themeBorderRadiusVal" class="radius-badge">22px</span>
+            </div>
+            <input type="range" id="themeBorderRadiusRange" min="0" max="48" step="1" value="22" />
+          </div>
+        </div>
+        <!-- 5. INFORMATION DU SITE -->
         <div class="cms-sidebar-section">
           <div class="cms-sidebar-section-title">Information du site</div>
           <div class="field">
@@ -231,6 +294,51 @@
         <div class="cms-modal-actions">
           <button id="confirmCancelBtn" type="button" class="secondary">Annuler</button>
           <button id="confirmActionBtn" type="button" class="cms-modal-confirm-btn">Supprimer</button>
+        </div>
+      </div>
+    </div>
+    <!-- Media Selection Modal (Solution 2 - Dossier media/) -->
+    <div id="mediaModal" class="cms-modal-backdrop" role="dialog" aria-modal="true">
+      <div class="cms-modal-box" style="max-width: 480px;">
+        <div class="cms-modal-tag">DOSSIER MEDIA / WORKFLOW</div>
+        <h4 id="mediaModalTitle" class="cms-modal-title">IMAGE DE LA CARTE</h4>
+        
+        <div style="display: flex; gap: 14px; align-items: center; margin-bottom: 16px; padding: 12px; background: var(--bg); border: 1px solid var(--hair); border-radius: 12px;">
+          <div style="width: 80px; height: 50px; border-radius: 8px; overflow: hidden; background: #000; flex-shrink: 0; border: 1px solid var(--hair);">
+            <img id="mediaModalPreview" src="media/_placeholder.png" alt="Aperçu" style="width: 100%; height: 100%; object-fit: cover;" />
+          </div>
+          <div style="min-width: 0; flex: 1;">
+            <div style="font-size: 10px; color: var(--ink-faint); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;">Emplacement dans media/</div>
+            <div id="mediaModalCurrentPath" style="font-family: var(--mono); font-size: 11px; color: var(--ink); word-break: break-all; margin-top: 2px;">media/_placeholder.png</div>
+          </div>
+        </div>
+
+        <div class="field" style="margin-bottom: 14px;">
+          <label style="margin-bottom: 6px;">1. Choisir un fichier depuis votre appareil</label>
+          <input type="file" id="mediaModalFileInput" accept="image/*" style="display: none;" />
+          <button type="button" id="mediaModalBrowseBtn" class="cms-sidebar-btn" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
+            <span>📁</span>
+            <span>Parcourir les fichiers images...</span>
+          </button>
+        </div>
+
+        <div class="field" style="margin-bottom: 14px;">
+          <label for="mediaModalPathInput" style="margin-bottom: 6px;">2. Ou nom / chemin du fichier dans [media]</label>
+          <input type="text" id="mediaModalPathInput" value="media/_placeholder.png" placeholder="media/mon-image.png" />
+        </div>
+
+        <div style="font-size: 10px; color: var(--ink-soft); line-height: 1.5; margin-bottom: 22px; padding: 10px 12px; background: rgba(0,0,0,0.03); border-radius: 8px; border-left: 3px solid var(--red);">
+          <strong>Rappel Git :</strong> Le site chargera cette image depuis le dossier <code>media/</code>. Si vous sélectionnez un nouveau fichier, pensez à le placer dans le dossier <code>media/</code> de votre projet.
+          <div id="mediaModalDownloadWrap" style="margin-top: 10px; display: none;">
+            <button type="button" id="mediaModalDownloadBtn" class="cms-sidebar-btn" style="width: auto; padding: 6px 12px; font-size: 10px; border-radius: 8px; background: #ffffff;">
+              ⬇ Télécharger une copie pour le dossier media/
+            </button>
+          </div>
+        </div>
+
+        <div class="cms-modal-actions">
+          <button id="mediaModalCancelBtn" type="button" class="secondary">Annuler</button>
+          <button id="mediaModalSaveBtn" type="button" class="cms-modal-confirm-btn" style="background: var(--ink-deep);">Appliquer à la carte</button>
         </div>
       </div>
     </div>

@@ -192,6 +192,59 @@
   margin-bottom: 8px;
 }
 
+/* Range input styling for radius adjustment */
+.field input[type="range"] {
+  width: 100%;
+  height: 6px;
+  padding: 0;
+  border: none;
+  background: var(--hair);
+  border-radius: 999px;
+  outline: none;
+  cursor: pointer;
+  accent-color: var(--red);
+  margin: 6px 0 2px;
+}
+
+.field input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--red);
+  border: 2px solid #ffffff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.field input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+.field input[type="range"]::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--red);
+  border: 2px solid #ffffff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+}
+
+.radius-badge {
+  display: inline-block;
+  padding: 2px 7px;
+  background: var(--ink-deep);
+  color: var(--on-ink);
+  border-radius: 999px;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
 /* Workspace Canvas with Sidebar Offset */
 .cms-workspace {
   margin-left: 390px;
@@ -401,6 +454,67 @@
   background: var(--red) !important;
   color: #ffffff !important;
   border-color: var(--red) !important;
+}
+
+/* Card Media CMS Overlay */
+.cms-card-media {
+  position: relative;
+  cursor: pointer;
+}
+
+.cms-media-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 10, 10, 0.72);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  padding: 12px;
+  text-align: center;
+  z-index: 5;
+}
+
+.cms-card:hover .cms-media-overlay {
+  opacity: 1;
+}
+
+.cms-media-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  background: var(--red);
+  color: #ffffff;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+}
+
+.cms-media-badge {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.85);
+  letter-spacing: 0.05em;
+  max-width: 90%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+body.cms-preview-mode .cms-media-overlay {
+  display: none !important;
 }
 
 /* Editable content elements */

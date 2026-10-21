@@ -28,11 +28,12 @@ async function getContent() {
 // Save content to localStorage
 function saveContent(content) {
   try {
-    if (content.sections && content.sections.length > 0) {
-      content.cards = content.sections[0] ? content.sections[0].items : [];
-      content.projects = content.sections[1] ? content.sections[1].items : [];
+    const cleanContent = JSON.parse(JSON.stringify(content, (k, v) => k === '_tempPreview' ? undefined : v));
+    if (cleanContent.sections && cleanContent.sections.length > 0) {
+      cleanContent.cards = cleanContent.sections[0] ? cleanContent.sections[0].items : [];
+      cleanContent.projects = cleanContent.sections[1] ? cleanContent.sections[1].items : [];
     }
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(content));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(cleanContent));
     return true;
   } catch (error) {
     console.error('Erreur sauvegarde localStorage:', error);
@@ -43,7 +44,7 @@ function saveContent(content) {
 // Download content as content.json for Git commit
 function exportContentJSON(content) {
   try {
-    const cleanContent = JSON.parse(JSON.stringify(content));
+    const cleanContent = JSON.parse(JSON.stringify(content, (k, v) => k === '_tempPreview' ? undefined : v));
     if (cleanContent.sections && cleanContent.sections.length > 0) {
       cleanContent.cards = cleanContent.sections[0] ? cleanContent.sections[0].items : [];
       cleanContent.projects = cleanContent.sections[1] ? cleanContent.sections[1].items : [];
@@ -82,6 +83,18 @@ function applyTheme(theme) {
   if (theme.textSoft) root.style.setProperty('--ink-soft', theme.textSoft);
   if (theme.textFaint) root.style.setProperty('--ink-faint', theme.textFaint);
   if (theme.accent) root.style.setProperty('--red', theme.accent);
+
+  // Typography styles
+  if (theme.fontDot) root.style.setProperty('--dot', theme.fontDot);
+  if (theme.fontMono) root.style.setProperty('--mono', theme.fontMono);
+  if (theme.fontSize) root.style.setProperty('--base-font-size', theme.fontSize);
+  if (theme.textTransform) root.style.setProperty('--text-transform', theme.textTransform);
+  if (theme.letterSpacing) root.style.setProperty('--letter-spacing', theme.letterSpacing);
+
+  // Border radius (arrondi des cartes, parties et blocs)
+  if (theme.borderRadius !== undefined && theme.borderRadius !== null && theme.borderRadius !== '') {
+    root.style.setProperty('--r', theme.borderRadius);
+  }
 }
 
 // Basic auth state

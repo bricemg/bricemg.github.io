@@ -28,6 +28,22 @@
   const confirmActionBtn = document.getElementById('confirmActionBtn');
   const cmsToast = document.getElementById('cmsToast');
 
+  const mediaModal = document.getElementById('mediaModal');
+  const mediaModalTitle = document.getElementById('mediaModalTitle');
+  const mediaModalPreview = document.getElementById('mediaModalPreview');
+  const mediaModalCurrentPath = document.getElementById('mediaModalCurrentPath');
+  const mediaModalFileInput = document.getElementById('mediaModalFileInput');
+  const mediaModalBrowseBtn = document.getElementById('mediaModalBrowseBtn');
+  const mediaModalPathInput = document.getElementById('mediaModalPathInput');
+  const mediaModalCancelBtn = document.getElementById('mediaModalCancelBtn');
+  const mediaModalSaveBtn = document.getElementById('mediaModalSaveBtn');
+  const mediaModalDownloadWrap = document.getElementById('mediaModalDownloadWrap');
+  const mediaModalDownloadBtn = document.getElementById('mediaModalDownloadBtn');
+
+  let editingMediaTarget = null;
+  let selectedLocalFile = null;
+  let activeDetailCard = null;
+
   async function init() {
     currentContent = await getContent();
     if (applyTheme && currentContent.theme) {
@@ -98,6 +114,81 @@
   function closeConfirmModal() {
     confirmModal.classList.remove('is-active');
     confirmCallback = null;
+  }
+
+  function showMediaModal(secIdx, itemIdx) {
+    const sections = currentContent.sections || [];
+    const sec = sections[secIdx];
+    if (!sec || !sec.items || !sec.items[itemIdx]) return;
+    const card = sec.items[itemIdx];
+
+    editingMediaTarget = { secIdx, itemIdx };
+    selectedLocalFile = null;
+    const currentImg = card.image || 'media/_placeholder.png';
+
+    if (mediaModalTitle) mediaModalTitle.textContent = `CARTE : ${card.title || 'SANS TITRE'}`;
+    if (mediaModalCurrentPath) mediaModalCurrentPath.textContent = currentImg;
+    if (mediaModalPathInput) mediaModalPathInput.value = currentImg;
+    if (mediaModalPreview) mediaModalPreview.src = card._tempPreview || currentImg;
+    if (mediaModalDownloadWrap) mediaModalDownloadWrap.style.display = 'none';
+
+    if (mediaModal) mediaModal.classList.add('is-active');
+  }
+
+  function closeMediaModal() {
+    if (mediaModal) mediaModal.classList.remove('is-active');
+    editingMediaTarget = null;
+    selectedLocalFile = null;
+    if (mediaModalFileInput) mediaModalFileInput.value = '';
+  }
+
+  function openAdminCardDetail(secIdx, itemIdx) {
+    const sections = currentContent?.sections || [];
+    const sec = sections[secIdx];
+    if (!sec || !sec.items || !sec.items[itemIdx]) return;
+    const card = sec.items[itemIdx];
+
+    activeDetailCard = { secIdx, itemIdx, card };
+
+    const modal = document.getElementById('cardDetailModal');
+    if (!modal) return;
+
+    const idxEl = document.getElementById('detailCardIdx');
+    const titleEl = document.getElementById('detailCardTitle');
+    const imageEl = document.getElementById('detailCardImage');
+    const codeEl = document.getElementById('detailCardCode');
+    const descEl = document.getElementById('detailCardDesc');
+    const typeEl = document.getElementById('detailCardType');
+    const statusEl = document.getElementById('detailCardStatus');
+    const longTextEl = document.getElementById('detailCardLongText');
+
+    if (idxEl) idxEl.textContent = String(itemIdx + 1).padStart(2, '0');
+    if (titleEl) titleEl.textContent = card.title || 'NOUVELLE CARTE';
+    if (imageEl) {
+      imageEl.src = card._tempPreview || card.image || 'media/_placeholder.png';
+      imageEl.alt = card.title || 'Aperçu';
+    }
+    if (codeEl) codeEl.textContent = card.code || 'CODE';
+    if (descEl) descEl.textContent = card.desc || '';
+    if (typeEl) typeEl.textContent = card.type || 'IDENTITÉ';
+    if (statusEl) statusEl.textContent = card.status || card.phase || 'ACTIF';
+    if (longTextEl) {
+      longTextEl.textContent = card.details || card.desc || 'Présentation détaillée du projet et démarches de conception.';
+    }
+
+    modal.classList.add('is-open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeAdminCardDetail() {
+    const modal = document.getElementById('cardDetailModal');
+    if (!modal) return;
+    modal.classList.remove('is-open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    activeDetailCard = null;
+    renderPage();
   }
 
   function setupAuthListeners() {
@@ -219,7 +310,23 @@
     if (pickerInput) pickerInput.value = formatHex(val, '#000000');
   }
 
+  function syncBorderRadiusUI(valStr) {
+    const raw = String(valStr || '22px').trim();
+    const num = parseInt(raw, 10);
+    const validNum = isNaN(num) ? 22 : num;
+    const normalized = `${validNum}px`;
+
+    const borderRadiusRange = document.getElementById('themeBorderRadiusRange');
+    const borderRadiusVal = document.getElementById('themeBorderRadiusVal');
+
+    if (borderRadiusRange) borderRadiusRange.value = validNum;
+    if (borderRadiusVal) borderRadiusVal.textContent = normalized;
+  }
+
   function applyThemeFromSidebar() {
+    const rangeEl = document.getElementById('themeBorderRadiusRange');
+    const currentRadius = rangeEl ? `${rangeEl.value}px` : "22px";
+
     currentContent.theme = {
       bg: document.getElementById('themeBg')?.value || '#e3e3e3',
       cell: document.getElementById('themeCell')?.value || '#f0f0f0',
@@ -227,7 +334,13 @@
       text: document.getElementById('themeText')?.value || '#2e2e2e',
       textSoft: document.getElementById('themeTextSoft')?.value || '#585858',
       textFaint: document.getElementById('themeTextFaint')?.value || '#9b9b9b',
-      accent: document.getElementById('themeAccent')?.value || '#d71921'
+      accent: document.getElementById('themeAccent')?.value || '#d71921',
+      fontDot: document.getElementById('themeFontDot')?.value || "'Doto', ui-monospace, monospace",
+      fontMono: document.getElementById('themeFontMono')?.value || "'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace",
+      fontSize: document.getElementById('themeFontSize')?.value || "12px",
+      textTransform: document.getElementById('themeTextTransform')?.value || "uppercase",
+      letterSpacing: document.getElementById('themeLetterSpacing')?.value || "0.02em",
+      borderRadius: currentRadius
     };
     applyTheme(currentContent.theme);
   }
@@ -241,6 +354,19 @@
     syncColorInput('TextSoft', theme.textSoft || '#585858');
     syncColorInput('TextFaint', theme.textFaint || '#9b9b9b');
     syncColorInput('Accent', theme.accent || '#d71921');
+
+    const fontDotEl = document.getElementById('themeFontDot');
+    const fontMonoEl = document.getElementById('themeFontMono');
+    const fontSizeEl = document.getElementById('themeFontSize');
+    const textTransformEl = document.getElementById('themeTextTransform');
+    const letterSpacingEl = document.getElementById('themeLetterSpacing');
+    if (fontDotEl && theme.fontDot) fontDotEl.value = theme.fontDot;
+    if (fontMonoEl && theme.fontMono) fontMonoEl.value = theme.fontMono;
+    if (fontSizeEl && theme.fontSize) fontSizeEl.value = theme.fontSize;
+    if (textTransformEl && theme.textTransform) textTransformEl.value = theme.textTransform;
+    if (letterSpacingEl && theme.letterSpacing) letterSpacingEl.value = theme.letterSpacing;
+
+    syncBorderRadiusUI(theme.borderRadius || '22px');
 
     const site = currentContent.site || {};
     const titleEl = document.getElementById('siteTitle');
@@ -368,6 +494,27 @@
       });
     });
 
+    ['themeFontDot', 'themeFontMono', 'themeFontSize', 'themeTextTransform', 'themeLetterSpacing'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('change', () => {
+          applyThemeFromSidebar();
+          showToast('Style typographique mis à jour');
+        });
+      }
+    });
+
+    const borderRadiusRange = document.getElementById('themeBorderRadiusRange');
+    if (borderRadiusRange) {
+      borderRadiusRange.addEventListener('input', () => {
+        syncBorderRadiusUI(`${borderRadiusRange.value}px`);
+        applyThemeFromSidebar();
+      });
+      borderRadiusRange.addEventListener('change', () => {
+        showToast(`Arrondi défini sur ${borderRadiusRange.value}px`);
+      });
+    }
+
     [
       'siteTitle', 'siteSubtitle', 'heroClaim', 'intro', 'about', 'email',
       'plateFLabel', 'plateFText1', 'plateFText2',
@@ -393,21 +540,134 @@
       }
       closeConfirmModal();
     });
+    confirmModal?.addEventListener('click', (e) => {
+      if (e.target === confirmModal) closeConfirmModal();
+    });
+
+    if (mediaModal) {
+      mediaModalCancelBtn?.addEventListener('click', closeMediaModal);
+      mediaModal.addEventListener('click', (e) => {
+        if (e.target === mediaModal) closeMediaModal();
+      });
+
+      mediaModalBrowseBtn?.addEventListener('click', () => {
+        mediaModalFileInput?.click();
+      });
+
+      mediaModalFileInput?.addEventListener('change', () => {
+        const file = mediaModalFileInput.files?.[0];
+        if (file) {
+          selectedLocalFile = file;
+          const normPath = 'media/' + file.name;
+          if (mediaModalPathInput) mediaModalPathInput.value = normPath;
+          if (mediaModalCurrentPath) mediaModalCurrentPath.textContent = normPath;
+
+          const previewUrl = URL.createObjectURL(file);
+          if (mediaModalPreview) mediaModalPreview.src = previewUrl;
+
+          if (mediaModalDownloadWrap) mediaModalDownloadWrap.style.display = 'block';
+        }
+      });
+
+      mediaModalDownloadBtn?.addEventListener('click', () => {
+        if (selectedLocalFile) {
+          const downloadAnchor = document.createElement('a');
+          downloadAnchor.href = URL.createObjectURL(selectedLocalFile);
+          downloadAnchor.download = selectedLocalFile.name;
+          document.body.appendChild(downloadAnchor);
+          downloadAnchor.click();
+          document.body.removeChild(downloadAnchor);
+          showToast(`Copie téléchargée : ${selectedLocalFile.name} (à glisser dans media/)`);
+        }
+      });
+
+      mediaModalPathInput?.addEventListener('input', () => {
+        const val = mediaModalPathInput.value.trim();
+        if (val) {
+          if (mediaModalCurrentPath) mediaModalCurrentPath.textContent = val;
+          if (mediaModalPreview) mediaModalPreview.src = val;
+        }
+      });
+
+      mediaModalSaveBtn?.addEventListener('click', () => {
+        if (editingMediaTarget) {
+          const { secIdx, itemIdx } = editingMediaTarget;
+          const sections = currentContent.sections || [];
+          const card = sections[secIdx]?.items?.[itemIdx];
+          if (card) {
+            let path = (mediaModalPathInput?.value || '').trim();
+            if (!path) path = 'media/_placeholder.png';
+            if (!path.startsWith('media/') && !path.startsWith('http://') && !path.startsWith('https://') && !path.startsWith('data:')) {
+              path = 'media/' + path;
+            }
+            card.image = path;
+            if (selectedLocalFile) {
+              card._tempPreview = URL.createObjectURL(selectedLocalFile);
+            } else {
+              delete card._tempPreview;
+            }
+            renderPage();
+            showToast(`Image définie : ${path}`);
+          }
+        }
+        closeMediaModal();
+      });
+    }
+
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('#cardDetailCloseBtn')) {
+        closeAdminCardDetail();
+      } else if (e.target.id === 'cardDetailModal') {
+        closeAdminCardDetail();
+      }
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const detailModal = document.getElementById('cardDetailModal');
+        if (detailModal && detailModal.classList.contains('is-open')) {
+          closeAdminCardDetail();
+        }
+      }
+    });
+
+    document.addEventListener('input', (e) => {
+      if (!activeDetailCard) return;
+      if (e.target.id === 'detailCardLongText') {
+        activeDetailCard.card.details = e.target.innerText.trim();
+      } else if (e.target.id === 'detailCardTitle') {
+        activeDetailCard.card.title = e.target.innerText.trim();
+      } else if (e.target.id === 'detailCardCode') {
+        activeDetailCard.card.code = e.target.innerText.trim();
+      } else if (e.target.id === 'detailCardDesc') {
+        activeDetailCard.card.desc = e.target.innerText.trim();
+      }
+    });
   }
 
   function setupAppDelegation() {
     appEl.addEventListener('click', (e) => {
-      if (isPreviewMode) return;
       const target = e.target.closest('[data-action]');
       if (!target) return;
       const action = target.getAttribute('data-action');
       const secIdx = parseInt(target.getAttribute('data-sec-idx'), 10);
       const itemIdx = parseInt(target.getAttribute('data-item-idx'), 10);
+
+      if (action === 'open-card-detail') {
+        e.preventDefault();
+        openAdminCardDetail(secIdx, itemIdx);
+        return;
+      }
+
+      if (isPreviewMode) return;
       const sections = currentContent.sections || [];
       const currentSec = sections[secIdx];
 
       // --- ACTIONS CARTES ---
-      if (action === 'move-card-prev') {
+      if (action === 'edit-card-media') {
+        showMediaModal(secIdx, itemIdx);
+        return;
+      } else if (action === 'move-card-prev') {
         if (!currentSec || itemIdx <= 0) return;
         const temp = currentSec.items[itemIdx];
         currentSec.items[itemIdx] = currentSec.items[itemIdx - 1];
@@ -445,6 +705,7 @@
           desc: 'Description du projet ou du service.',
           type: 'IDENTITÉ',
           status: 'ACTIF',
+          image: 'media/_placeholder.png',
           visible: true
         };
         currentSec.items.push(newItem);
