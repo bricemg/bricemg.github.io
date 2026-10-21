@@ -8,7 +8,7 @@
     "email": "bonjour@bricemg.dev"
   },
   "theme": {
-    "bgStart": "#dc143d",
+    "bgStart": "#1c143d",
     "bgEnd": "#110b28",
     "bgAngle": "135deg",
     "bg": "#1c143d",
