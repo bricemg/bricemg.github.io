@@ -1,0 +1,11 @@
+# Archives et sauvegardes de version
+archives/
+*.zip
+
+# Fichiers système et éditeurs
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.log
