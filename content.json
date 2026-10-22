@@ -46,7 +46,9 @@
           "type": "IDENTITÉ",
           "status": "ACTIF",
           "visible": true,
-          "image": "media/-nuage.png"
+          "image": "media/-nuage.png",
+          "full": true,
+          "hasDetail": true
         },
         {
           "id": "portfolio",
@@ -56,7 +58,9 @@
           "type": "CASE STUDIES",
           "status": "ACTIF",
           "visible": true,
-          "image": "media/nuage.png"
+          "image": "media/-placeholder.png",
+          "full": true,
+          "hasDetail": true
         },
         {
           "id": "web",
@@ -66,7 +70,9 @@
           "type": "PRODUCTION",
           "status": "EN COURS",
           "visible": true,
-          "image": "media/_nuage.png"
+          "image": "media/_nuage.png",
+          "full": true,
+          "hasDetail": true
         },
         {
           "id": "experiments",
@@ -75,7 +81,9 @@
           "desc": "Outils, interfaces, motion, génération graphique.",
           "type": "R&D",
           "status": "EXPLORATION",
-          "visible": true
+          "visible": true,
+          "full": true,
+          "hasDetail": true
         },
         {
           "id": "card_1792513084677",
@@ -84,7 +92,9 @@
           "desc": "Description du projet ou du service.",
           "type": "IDENTITÉ",
           "status": "ACTIF",
-          "visible": true
+          "visible": true,
+          "full": true,
+          "hasDetail": true
         }
       ]
     },
@@ -128,6 +138,34 @@
           "desc": "Visuel, communication, campagnes et trousse de présentation.",
           "type": "ÉVÈNEMENT",
           "status": "PLANIFICATION",
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "sec_1792698814986",
+      "letter": "C",
+      "title": "NOUVELLE SECTION",
+      "visible": true,
+      "items": [
+        {
+          "id": "card_1792698814986",
+          "title": "PREMIÈRE CARTE",
+          "code": "CODE",
+          "desc": "Description de la réalisation...",
+          "type": "R&D",
+          "status": "EN COURS",
+          "visible": true,
+          "image": "media/-dummy.png"
+        },
+        {
+          "id": "card_1792698833957",
+          "title": "NOUVELLE CARTE",
+          "code": "CODE",
+          "desc": "Description du projet ou du service.",
+          "type": "IDENTITÉ",
+          "status": "ACTIF",
+          "image": "media/-dummy.png",
           "visible": true
         }
       ]
@@ -193,7 +231,9 @@
       "type": "IDENTITÉ",
       "status": "ACTIF",
       "visible": true,
-      "image": "media/-nuage.png"
+      "image": "media/-nuage.png",
+      "full": true,
+      "hasDetail": true
     },
     {
       "id": "portfolio",
@@ -203,7 +243,9 @@
       "type": "CASE STUDIES",
       "status": "ACTIF",
       "visible": true,
-      "image": "media/-placeholder.png"
+      "image": "media/-placeholder.png",
+      "full": true,
+      "hasDetail": true
     },
     {
       "id": "web",
@@ -213,7 +255,9 @@
       "type": "PRODUCTION",
       "status": "EN COURS",
       "visible": true,
-      "image": "media/_nuage.png"
+      "image": "media/_nuage.png",
+      "full": true,
+      "hasDetail": true
     },
     {
       "id": "experiments",
@@ -222,7 +266,9 @@
       "desc": "Outils, interfaces, motion, génération graphique.",
       "type": "R&D",
       "status": "EXPLORATION",
-      "visible": true
+      "visible": true,
+      "full": true,
+      "hasDetail": true
     },
     {
       "id": "card_1792513084677",
@@ -231,7 +277,9 @@
       "desc": "Description du projet ou du service.",
       "type": "IDENTITÉ",
       "status": "ACTIF",
-      "visible": true
+      "visible": true,
+      "full": true,
+      "hasDetail": true
     }
   ],
   "projects": [
