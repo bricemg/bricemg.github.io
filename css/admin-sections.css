@@ -830,6 +830,75 @@ body.cms-preview-mode .cms-media-overlay {
   opacity: 0.85;
 }
 
+.cms-detail-link-bar {
+  margin-top: 10px;
+  text-align: left;
+}
+
+.cms-detail-link-btn {
+  padding: 5px 10px;
+  font-family: var(--odp-font);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  background: var(--odp-bg-card);
+  color: var(--odp-blue);
+  border: 1px solid var(--odp-border-light);
+  border-radius: 8px;
+  cursor: pointer;
+  text-transform: none;
+}
+
+.cms-detail-link-btn:hover {
+  background: var(--odp-blue);
+  color: #1b1d23;
+  border-color: var(--odp-blue);
+}
+
+.cms-link-modal {
+  z-index: 2600;
+}
+
+.cms-link-modal-box {
+  max-width: 320px !important;
+  padding: 18px !important;
+}
+
+.cms-link-modal-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.cms-link-modal .field input {
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--odp-bg-input) !important;
+  border: 1px solid var(--odp-border-light) !important;
+  color: var(--odp-fg-bright) !important;
+  font-family: var(--odp-font) !important;
+  font-size: 13px !important;
+  text-transform: none !important;
+  letter-spacing: normal !important;
+  padding: 10px 12px;
+  border-radius: 8px;
+}
+
+.cms-link-modal .field input:focus {
+  outline: none;
+  border-color: var(--odp-border-focus) !important;
+}
+
+.cms-link-modal-ok {
+  background: var(--odp-blue) !important;
+  color: #1e2227 !important;
+}
+
+.cms-link-modal-ok:hover {
+  background: #7dc0f5 !important;
+}
+
 /* Add Card Placeholder Slot */
 .cms-card-add {
   display: flex;
@@ -1111,7 +1180,8 @@ body.cms-preview-mode .cms-card-toolbar,
 body.cms-preview-mode .cms-card-add,
 body.cms-preview-mode .cms-sec-actions,
 body.cms-preview-mode .cms-add-section-wrapper,
-body.cms-preview-mode .cms-card-edit-hint {
+body.cms-preview-mode .cms-card-edit-hint,
+body.cms-preview-mode .cms-detail-link-bar {
   display: none !important;
 }
 

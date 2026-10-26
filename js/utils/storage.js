@@ -158,7 +158,40 @@ function sanitize(str) {
   return div.innerHTML;
 }
 
+function linkify(str) {
+  return sanitize(str).replace(/(https?:\/\/[^\s<]+)/gi, (match) => {
+    const trailing = match.match(/[.,;:!?)]+$/);
+    const suffix = trailing ? trailing[0] : '';
+    const url = suffix ? match.slice(0, -suffix.length) : match;
+    if (!/^https?:\/\//i.test(url)) return match;
+    return `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>${suffix}`;
+  });
+}
+
+function formatDetailHtml(str) {
+  const source = str == null ? '' : String(str);
+  const links = [];
+  const withTokens = source.replace(
+    /<a\s+href\s*=\s*(["'])(https?:\/\/[^"'<>\s]+)\1\s*>([\s\S]*?)<\/a>/gi,
+    (_, _quote, href, label) => {
+      const token = `%%BRICE_A_${links.length}%%`;
+      links.push({ href, label });
+      return token;
+    }
+  );
+
+  let html = linkify(withTokens);
+  links.forEach((link, i) => {
+    html = html.split(`%%BRICE_A_${i}%%`).join(
+      `<a href="${sanitize(link.href)}" target="_blank" rel="noopener noreferrer">${sanitize(link.label)}</a>`
+    );
+  });
+  return html;
+}
+
 window.sanitize = sanitize;
+window.linkify = linkify;
+window.formatDetailHtml = formatDetailHtml;
 window.storageUtils = {
   STORAGE_KEY,
   ADMIN_SECRET,
@@ -169,5 +202,7 @@ window.storageUtils = {
   applyTheme,
   isAuthenticated,
   setAuthenticated,
-  sanitize
+  sanitize,
+  linkify,
+  formatDetailHtml
 };

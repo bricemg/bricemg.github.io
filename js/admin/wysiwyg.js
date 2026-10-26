@@ -40,9 +40,16 @@
   const mediaModalDownloadWrap = document.getElementById('mediaModalDownloadWrap');
   const mediaModalDownloadBtn = document.getElementById('mediaModalDownloadBtn');
 
+  const detailLinkModal = document.getElementById('detailLinkModal');
+  const detailLinkText = document.getElementById('detailLinkText');
+  const detailLinkUrl = document.getElementById('detailLinkUrl');
+  const detailLinkCancelBtn = document.getElementById('detailLinkCancelBtn');
+  const detailLinkOkBtn = document.getElementById('detailLinkOkBtn');
+
   let editingMediaTarget = null;
   let selectedLocalFile = null;
   let activeDetailCard = null;
+  let savedDetailLinkRange = null;
 
   async function init() {
     currentContent = await getContent();
@@ -186,6 +193,7 @@
   }
 
   function closeAdminCardDetail() {
+    closeDetailLinkModal();
     const modal = document.getElementById('cardDetailModal');
     if (!modal) return;
     modal.classList.remove('is-open');
@@ -193,6 +201,78 @@
     document.body.style.overflow = '';
     activeDetailCard = null;
     renderPage();
+  }
+
+  function saveDetailLinkSelection() {
+    const longTextEl = document.getElementById('detailCardLongText');
+    const sel = window.getSelection();
+    if (longTextEl && sel && sel.rangeCount && longTextEl.contains(sel.anchorNode)) {
+      savedDetailLinkRange = sel.getRangeAt(0).cloneRange();
+    } else {
+      savedDetailLinkRange = null;
+    }
+  }
+
+  function openDetailLinkModal() {
+    if (!detailLinkModal) return;
+    const selected = savedDetailLinkRange ? savedDetailLinkRange.toString() : '';
+    if (detailLinkText) detailLinkText.value = selected.trim();
+    if (detailLinkUrl) detailLinkUrl.value = '';
+    detailLinkModal.classList.add('is-active');
+    detailLinkModal.setAttribute('aria-hidden', 'false');
+    const focusEl = selected.trim() ? detailLinkUrl : detailLinkText;
+    setTimeout(() => focusEl?.focus(), 0);
+  }
+
+  function closeDetailLinkModal() {
+    if (!detailLinkModal) return;
+    detailLinkModal.classList.remove('is-active');
+    detailLinkModal.setAttribute('aria-hidden', 'true');
+  }
+
+  function normalizeDetailHref(raw) {
+    let url = String(raw || '').trim();
+    if (!url) return '';
+    if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+    if (!/^https?:\/\/[^\s"'<>]+$/i.test(url)) return '';
+    return url;
+  }
+
+  function applyDetailLink() {
+    const longTextEl = document.getElementById('detailCardLongText');
+    if (!longTextEl || !activeDetailCard) {
+      closeDetailLinkModal();
+      return;
+    }
+
+    const href = normalizeDetailHref(detailLinkUrl?.value);
+    if (!href) {
+      detailLinkUrl?.focus();
+      return;
+    }
+
+    const label = String(detailLinkText?.value || '').trim() || href;
+    const snippet = `<a href="${href}">${label.replace(/<\/a>/gi, '')}</a>`;
+
+    longTextEl.focus();
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+
+    if (savedDetailLinkRange && longTextEl.contains(savedDetailLinkRange.commonAncestorContainer)) {
+      savedDetailLinkRange.deleteContents();
+      const node = document.createTextNode(snippet);
+      savedDetailLinkRange.insertNode(node);
+      savedDetailLinkRange.setStartAfter(node);
+      savedDetailLinkRange.collapse(true);
+      sel.addRange(savedDetailLinkRange);
+    } else {
+      const prefix = longTextEl.innerText && !longTextEl.innerText.endsWith('\n') ? '\n' : '';
+      longTextEl.appendChild(document.createTextNode(prefix + snippet));
+    }
+
+    activeDetailCard.card.details = longTextEl.innerText.trim();
+    savedDetailLinkRange = null;
+    closeDetailLinkModal();
   }
 
   function setupAuthListeners() {
@@ -662,6 +742,22 @@
       });
     }
 
+    if (detailLinkModal) {
+      detailLinkCancelBtn?.addEventListener('click', closeDetailLinkModal);
+      detailLinkOkBtn?.addEventListener('click', applyDetailLink);
+      detailLinkModal.addEventListener('click', (e) => {
+        if (e.target === detailLinkModal) closeDetailLinkModal();
+      });
+      [detailLinkText, detailLinkUrl].forEach((input) => {
+        input?.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            applyDetailLink();
+          }
+        });
+      });
+    }
+
     document.addEventListener('click', (e) => {
       if (e.target.closest('#cardDetailCloseBtn')) {
         closeAdminCardDetail();
@@ -671,11 +767,14 @@
     });
 
     window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        const detailModal = document.getElementById('cardDetailModal');
-        if (detailModal && detailModal.classList.contains('is-open')) {
-          closeAdminCardDetail();
-        }
+      if (e.key !== 'Escape') return;
+      if (detailLinkModal && detailLinkModal.classList.contains('is-active')) {
+        closeDetailLinkModal();
+        return;
+      }
+      const detailModal = document.getElementById('cardDetailModal');
+      if (detailModal && detailModal.classList.contains('is-open')) {
+        closeAdminCardDetail();
       }
     });
 
@@ -698,12 +797,25 @@
   }
 
   function setupAppDelegation() {
+    appEl.addEventListener('mousedown', (e) => {
+      if (e.target.closest('[data-action="insert-detail-link"]')) {
+        e.preventDefault();
+        saveDetailLinkSelection();
+      }
+    });
+
     appEl.addEventListener('click', (e) => {
       const target = e.target.closest('[data-action]');
       if (!target) return;
       const action = target.getAttribute('data-action');
       const secIdx = parseInt(target.getAttribute('data-sec-idx'), 10);
       const itemIdx = parseInt(target.getAttribute('data-item-idx'), 10);
+
+      if (action === 'insert-detail-link') {
+        e.preventDefault();
+        openDetailLinkModal();
+        return;
+      }
 
       if (action === 'open-card-detail') {
         e.preventDefault();

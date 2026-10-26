@@ -301,11 +301,11 @@ function buildCardDetailModalHTML(isEditable) {
             <div><dt>VERSION</dt><dd class="${isEditable ? 'cms-editable' : ''}" id="detailCardStatus" ${isEditable ? 'contenteditable="true" spellcheck="false" data-field="version"' : ''}>v 0.1.3</dd></div>
           </dl>
 
-          <div class="card-detail-section-title">DESCRIPTION</div>
+          <div class="card-detail-section-title"></div>
           
           <div class="card-detail-text ${isEditable ? 'cms-editable' : ''}" id="detailCardLongText" ${isEditable ? 'contenteditable="true" spellcheck="false" data-field="details"' : ''}>
           </div>
-          ${isEditable ? '<div class="cms-card-edit-hint" style="text-align: left; margin-top: 8px;">✎ Les notes ci-dessus sont éditables directement au clavier et sauvegardées pour cette carte.</div>' : ''}
+          ${isEditable ? '<div class="cms-card-edit-hint" style="text-align: left; margin-top: 8px;">✎ Notes éditables. Lien : &lt;a href="https://exemple.com"&gt;Texte cliquable&lt;/a&gt; — ou coller une URL https://…</div>' : ''}
         </div>
       </div>
     </div>

@@ -59,7 +59,13 @@
     if (typeEl) typeEl.textContent = card.type || 'IDENTITÉ';
     if (statusEl) statusEl.textContent = card.version || card.status || card.phase || 'v 0.1.0';
     if (longTextEl) {
-      longTextEl.textContent = card.details || card.desc || 'Présentation détaillée du projet en cours de rédaction au sein du studio BRICEMG.';
+      const raw = card.details || card.desc || 'Présentation détaillée du projet en cours de rédaction au sein du studio BRICEMG.';
+      const formatDetailHtml = (window.storageUtils && window.storageUtils.formatDetailHtml) || window.formatDetailHtml;
+      if (typeof formatDetailHtml === 'function') {
+        longTextEl.innerHTML = formatDetailHtml(raw);
+      } else {
+        longTextEl.textContent = raw;
+      }
     }
 
     modal.classList.add('is-open');
