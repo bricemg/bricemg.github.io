@@ -516,6 +516,10 @@
     const site = currentContent.site || {};
     const titleEl = document.getElementById('siteTitle');
     const subtitleEl = document.getElementById('siteSubtitle');
+    const cell1TitleEl = document.getElementById('cell1Title');
+    const cell1BodyEl = document.getElementById('cell1Body');
+    const cell2TitleEl = document.getElementById('cell2Title');
+    const cell2BodyEl = document.getElementById('cell2Body');
     const claimEl = document.getElementById('heroClaim');
     const introEl = document.getElementById('intro');
     const aboutEl = document.getElementById('about');
@@ -523,6 +527,10 @@
 
     if (titleEl) titleEl.value = site.title || 'BRICEMG / STUDIO';
     if (subtitleEl) subtitleEl.value = site.subtitle || 'DESIGN / CODE / VISION';
+    if (cell1TitleEl) cell1TitleEl.value = site.cell1Title || 'BRICEMG';
+    if (cell1BodyEl) cell1BodyEl.value = site.cell1Body !== undefined ? site.cell1Body : 'STUDIO\nDESIGN / CODE / VISION\nINDEX V0.1\nLANGUAGE : FR';
+    if (cell2TitleEl) cell2TitleEl.value = site.cell2Title || 'NOUS';
+    if (cell2BodyEl) cell2BodyEl.value = site.cell2Body !== undefined ? site.cell2Body : 'CRÉER\nJe crée des interfaces, des identités visuelles et des expériences web qui donnent du sens à une idée.\nRÉFLEXION\nPENSER, CONCEVOIR ET DÉVELOPPER DE A À Z\nOBJECTIF\nJe conçois et développe des projets à la croisée du design, du produit et du code.';
     if (claimEl) claimEl.value = site.heroClaim || '';
     if (introEl) introEl.value = site.intro || '';
     if (aboutEl) aboutEl.value = site.about || '';
@@ -543,14 +551,24 @@
 
   function syncSidebarToContent() {
     applyThemeFromSidebar();
-    currentContent.site = {
-      title: document.getElementById('siteTitle')?.value.trim() || 'BRICEMG / STUDIO',
-      subtitle: document.getElementById('siteSubtitle')?.value.trim() || 'DESIGN / CODE / VISION',
-      heroClaim: document.getElementById('heroClaim')?.value.trim() || '',
-      intro: document.getElementById('intro')?.value.trim() || '',
-      about: document.getElementById('about')?.value.trim() || '',
-      email: document.getElementById('email')?.value.trim() || 'bonjour@bricemg.dev'
-    };
+    const cell1TitleVal = document.getElementById('cell1Title')?.value.trim() || 'BRICEMG';
+    const cell1BodyVal = document.getElementById('cell1Body')?.value || '';
+    const cell2TitleVal = document.getElementById('cell2Title')?.value.trim() || 'NOUS';
+    const cell2BodyVal = document.getElementById('cell2Body')?.value || '';
+
+    currentContent.site = currentContent.site || {};
+    currentContent.site.cell1Title = cell1TitleVal;
+    currentContent.site.cell1Body = cell1BodyVal;
+    currentContent.site.cell2Title = cell2TitleVal;
+    currentContent.site.cell2Body = cell2BodyVal;
+    currentContent.site.heroClaim = document.getElementById('heroClaim')?.value.trim() || '';
+    currentContent.site.email = document.getElementById('email')?.value.trim() || 'bonjour@bricemg.dev';
+    if (document.getElementById('siteTitle')) {
+      currentContent.site.title = document.getElementById('siteTitle').value.trim();
+    }
+    if (document.getElementById('siteSubtitle')) {
+      currentContent.site.subtitle = document.getElementById('siteSubtitle').value.trim();
+    }
 
     currentContent.footer = {
       col1: document.getElementById('footerCol1')?.value.trim() || 'BRICEMG',
@@ -644,6 +662,7 @@
     }
 
     [
+      'cell1Title', 'cell1Body', 'cell2Title', 'cell2Body',
       'siteTitle', 'siteSubtitle', 'heroClaim', 'intro', 'about', 'email',
       'plateFLabel', 'plateFText1', 'plateFText2',
       'plateGLabel', 'plateGText1', 'plateGText2',
@@ -855,6 +874,12 @@
         currentSec.items[itemIdx].hasDetail = !currentVal;
         renderPage();
         showToast(!currentVal ? 'Vue détaillée activée (FULL)' : 'Vue détaillée désactivée (STANDARD)');
+      } else if (action === 'toggle-card-media') {
+        if (!currentSec || !currentSec.items[itemIdx]) return;
+        const currentMedia = currentSec.items[itemIdx].showMedia !== false;
+        currentSec.items[itemIdx].showMedia = !currentMedia;
+        renderPage();
+        showToast(!currentMedia ? 'Image affichée' : 'Image masquée (carte compacte)');
       } else if (action === 'delete-card') {
         if (!currentSec || !currentSec.items[itemIdx]) return;
         const cardTitle = currentSec.items[itemIdx].title || 'cette carte';
@@ -992,6 +1017,34 @@
         if (currentContent.sections[secIdx]) {
           currentContent.sections[secIdx].title = val;
         }
+      } else if (field === 'site-cell1-title') {
+        currentContent.site = currentContent.site || {};
+        currentContent.site.cell1Title = val;
+        const inputEl = document.getElementById('cell1Title');
+        if (inputEl) inputEl.value = val;
+      } else if (field === 'site-cell1-body') {
+        currentContent.site = currentContent.site || {};
+        const textVal = target.innerText.replace(/\r\n/g, '\n');
+        currentContent.site.cell1Body = textVal;
+        const inputEl = document.getElementById('cell1Body');
+        if (inputEl) inputEl.value = textVal;
+      } else if (field === 'site-cell2-title') {
+        currentContent.site = currentContent.site || {};
+        currentContent.site.cell2Title = val;
+        const inputEl = document.getElementById('cell2Title');
+        if (inputEl) inputEl.value = val;
+      } else if (field === 'site-cell2-body') {
+        currentContent.site = currentContent.site || {};
+        const textVal = target.innerText.replace(/\r\n/g, '\n');
+        currentContent.site.cell2Body = textVal;
+        const inputEl = document.getElementById('cell2Body');
+        if (inputEl) inputEl.value = textVal;
+      } else if (field === 'site-hero-claim') {
+        currentContent.site = currentContent.site || {};
+        const textVal = target.innerText.replace(/\r\n/g, '\n');
+        currentContent.site.heroClaim = textVal;
+        const inputEl = document.getElementById('heroClaim');
+        if (inputEl) inputEl.value = textVal;
       } else if (field && !isNaN(secIdx) && !isNaN(itemIdx)) {
         const sec = currentContent.sections[secIdx];
         if (sec && sec.items[itemIdx]) {

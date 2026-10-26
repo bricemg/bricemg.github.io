@@ -3,6 +3,10 @@
     "title": "BRICEMG / STUDIO",
     "subtitle": "DESIGN / CODE / VISION",
     "heroClaim": "From Idea to projects !\nvisual / code / tools & stuff",
+    "cell1Title": "BRICEMG",
+    "cell1Body": "STUDIO\nDESIGN / CODE / VISION\n\nINDEX V0.1\nLANGUAGE : FR",
+    "cell2Title": "NOUS",
+    "cell2Body": "CRÉER\nJe crée des interfaces, des identités visuelles et des expériences web qui donnent du sens à une idée.\n\nRÉFLEXION\nPENSER, CONCEVOIR ET DÉVELOPPER DE A À Z\nOBJECTIF\nJe conçois et développe des projets à la croisée du design, du produit et du code.",
     "intro": "",
     "about": "",
     "email": "bonjour@bricemg.dev"
@@ -29,7 +33,7 @@
     "fontSize": "12px",
     "textTransform": "uppercase",
     "letterSpacing": "0.02em",
-    "borderRadius": "12px"
+    "borderRadius": "8px"
   },
   "sections": [
     {
@@ -50,7 +54,9 @@
           "version": "V 1.2",
           "full": true,
           "hasDetail": true,
-          "details": "Update and refresh of my portfolio with a selection of nice projects\nFollow that link : <a href=\"https://www.dropbox.com/scl/fi/9ktg2v06xsg4h4uo2dtpn/Book_DaProd_BriceMG_2506.pdf?rlkey=isqsquj1uj1q2do4wu2jibxlc&st=gg32tdrr&dl=0\">Link</a>"
+          "details": "Update and refresh of my portfolio with a selection of nice projects\nFollow that link : <a href=\"https://www.dropbox.com/scl/fi/9ktg2v06xsg4h4uo2dtpn/Book_DaProd_BriceMG_2506.pdf?rlkey=isqsquj1uj1q2do4wu2jibxlc&st=gg32tdrr&dl=0\">Link</a>",
+          "media": true,
+          "showMedia": true
         },
         {
           "id": "card_1792768713294",
@@ -59,11 +65,13 @@
           "desc": "VIDEO GAMES UX:UI DESIGN",
           "type": "DESIGN",
           "status": "ACTIF",
-          "image": "media/_placeholder.png",
-          "visible": true,
+          "image": "media/steelRising.jpg",
+          "visible": false,
           "version": "FINAL",
           "full": true,
-          "hasDetail": true
+          "hasDetail": true,
+          "details": "Follow that: <a href=\"https://store.steampowered.com/app/1283400/Steelrising/\">Link</a>",
+          "media": true
         },
         {
           "id": "card_1792768718040",
@@ -325,7 +333,9 @@
       "version": "V 1.2",
       "full": true,
       "hasDetail": true,
-      "details": "Update and refresh of my portfolio with a selection of nice projects\nFollow that link : <a href=\"https://www.dropbox.com/scl/fi/9ktg2v06xsg4h4uo2dtpn/Book_DaProd_BriceMG_2506.pdf?rlkey=isqsquj1uj1q2do4wu2jibxlc&st=gg32tdrr&dl=0\">Link</a>"
+      "details": "Update and refresh of my portfolio with a selection of nice projects\nFollow that link : <a href=\"https://www.dropbox.com/scl/fi/9ktg2v06xsg4h4uo2dtpn/Book_DaProd_BriceMG_2506.pdf?rlkey=isqsquj1uj1q2do4wu2jibxlc&st=gg32tdrr&dl=0\">Link</a>",
+      "media": true,
+      "showMedia": true
     },
     {
       "id": "card_1792768713294",
@@ -334,11 +344,13 @@
       "desc": "VIDEO GAMES UX:UI DESIGN",
       "type": "DESIGN",
       "status": "ACTIF",
-      "image": "media/_placeholder.png",
-      "visible": true,
+      "image": "media/steelRising.jpg",
+      "visible": false,
       "version": "FINAL",
       "full": true,
-      "hasDetail": true
+      "hasDetail": true,
+      "details": "Follow that: <a href=\"https://store.steampowered.com/app/1283400/Steelrising/\">Link</a>",
+      "media": true
     },
     {
       "id": "card_1792768718040",

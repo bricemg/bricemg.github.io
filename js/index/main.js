@@ -92,21 +92,25 @@
         const cardId = trigger.getAttribute('data-card-id');
         const secIdx = parseInt(trigger.getAttribute('data-sec-idx'), 10);
         const itemIdx = parseInt(trigger.getAttribute('data-item-idx'), 10);
+        const displayIdx = parseInt(trigger.getAttribute('data-display-idx'), 10);
 
         let foundCard = null;
-        let cardIndex = itemIdx;
+        let cardIndex = !isNaN(displayIdx) ? displayIdx : itemIdx;
 
-        if (!isNaN(secIdx) && currentContent?.sections?.[secIdx]?.items?.[itemIdx]) {
-          foundCard = currentContent.sections[secIdx].items[itemIdx];
-        } else if (cardId && currentContent?.sections) {
+        // 1. Recherche prioritaire par ID exact de la carte si présent
+        if (cardId && currentContent?.sections) {
           for (const sec of currentContent.sections) {
-            const idx = (sec.items || []).findIndex(it => it.id === cardId);
-            if (idx !== -1) {
-              foundCard = sec.items[idx];
-              cardIndex = idx;
+            const found = (sec.items || []).find(it => it.id === cardId);
+            if (found) {
+              foundCard = found;
               break;
             }
           }
+        }
+
+        // 2. Repli par secIdx / itemIdx réel
+        if (!foundCard && !isNaN(secIdx) && currentContent?.sections?.[secIdx]?.items?.[itemIdx]) {
+          foundCard = currentContent.sections[secIdx].items[itemIdx];
         }
 
         if (foundCard) {

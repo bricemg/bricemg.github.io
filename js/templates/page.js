@@ -34,22 +34,27 @@
 const FALLBACK_MEDIA_SVG = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 500'%3E%3Crect width='100%25' height='100%25' fill='%23120f24'/%3E%3Cpath d='M0 0l800 500M800 0L0 500' stroke='%232c1f51' stroke-width='1.5' stroke-dasharray='8 8'/%3E%3Ccircle cx='400' cy='250' r='44' fill='none' stroke='%23e17f0e' stroke-width='2'/%3E%3Ctext x='50%25' y='52%25' dominant-baseline='middle' text-anchor='middle' fill='%23afa6e3' font-family='monospace' font-size='13' letter-spacing='3'%3EBRICEMG / MEDIA%3C/text%3E%3C/svg%3E";
 window.FALLBACK_MEDIA_SVG = FALLBACK_MEDIA_SVG;
 
-function buildCardVisitorHTML(card, index, secIdx) {
+function buildCardVisitorHTML(card, displayIndex, secIdx, realIndex) {
+  const itemIdx = (realIndex !== undefined && realIndex !== null) ? realIndex : displayIndex;
   const imgSrc = card.image || 'media/_placeholder.png';
   const displayTitle = card.code || card.title || 'BRAND';
   const displayVersion = card.version || card.status || card.phase || 'v 0.1.0';
   const isFull = card.full === true || card.hasDetail === true;
+  const hasMedia = card.showMedia !== false;
+
+  const mediaHTML = hasMedia ? `
+        <div class="card-media">
+          <img src="${sanitize(imgSrc)}" alt="${sanitize(displayTitle)}" loading="lazy" onerror="this.onerror=null; this.src='${FALLBACK_MEDIA_SVG}';" />
+        </div>` : '';
 
   if (isFull) {
     return `
-      <a class="cell tool tool--has-detail" data-tool="${sanitize(card.id)}" data-card-id="${sanitize(card.id)}" data-sec-idx="${secIdx ?? ''}" data-item-idx="${index}" data-action="open-card-detail" href="javascript:void(0);" target="_self">
+      <a class="cell tool tool--has-detail ${!hasMedia ? 'tool--no-media' : ''}" data-tool="${sanitize(card.id)}" data-card-id="${sanitize(card.id)}" data-sec-idx="${secIdx ?? ''}" data-item-idx="${itemIdx}" data-display-idx="${displayIndex}" data-action="open-card-detail" href="javascript:void(0);" target="_self">
         <div class="cell-top">
-          <span class="dot idx">${String(index + 1).padStart(2, '0')}</span>
+          <span class="dot idx">${String(displayIndex + 1).padStart(2, '0')}</span>
           <span class="cue"></span>
         </div>
-        <div class="card-media">
-          <img src="${sanitize(imgSrc)}" alt="${sanitize(displayTitle)}" loading="lazy" onerror="this.onerror=null; this.src='${FALLBACK_MEDIA_SVG}';" />
-        </div>
+        ${mediaHTML}
         <div class="cell-body">
           <div class="card-content-block">
             <div class="name">${sanitize(displayTitle)}</div>
@@ -66,14 +71,12 @@ function buildCardVisitorHTML(card, index, secIdx) {
   }
 
   return `
-    <div class="cell tool tool--standard" data-tool="${sanitize(card.id)}" data-card-id="${sanitize(card.id)}" data-sec-idx="${secIdx ?? ''}" data-item-idx="${index}">
+    <div class="cell tool tool--standard ${!hasMedia ? 'tool--no-media' : ''}" data-tool="${sanitize(card.id)}" data-card-id="${sanitize(card.id)}" data-sec-idx="${secIdx ?? ''}" data-item-idx="${itemIdx}" data-display-idx="${displayIndex}">
       <div class="cell-top">
-        <span class="dot idx">${String(index + 1).padStart(2, '0')}</span>
+        <span class="dot idx">${String(displayIndex + 1).padStart(2, '0')}</span>
         <span class="cue"></span>
       </div>
-      <div class="card-media">
-        <img src="${sanitize(imgSrc)}" alt="${sanitize(displayTitle)}" loading="lazy" onerror="this.onerror=null; this.src='${FALLBACK_MEDIA_SVG}';" />
-      </div>
+      ${mediaHTML}
       <div class="cell-body">
         <div class="card-content-block">
           <div class="name">${sanitize(displayTitle)}</div>
@@ -91,17 +94,29 @@ function buildCardVisitorHTML(card, index, secIdx) {
 function buildCardEditableHTML(card, index, secIdx, totalCards) {
   const isHidden = card.visible === false;
   const isFull = card.full === true || card.hasDetail === true;
+  const hasMedia = card.showMedia !== false;
   const imgSrc = card._tempPreview || card.image || 'media/_placeholder.png';
   const displayTitle = card.code || card.title || 'BRAND';
   const displayVersion = card.version || card.status || card.phase || 'v 0.1.0';
+
+  const mediaHTML = hasMedia ? `
+      <div class="card-media cms-card-media" data-action="edit-card-media" data-sec-idx="${secIdx}" data-item-idx="${index}" title="Cliquer pour changer l'image">
+        <img src="${sanitize(imgSrc)}" alt="${sanitize(displayTitle)}" loading="lazy" onerror="this.onerror=null; this.src='${FALLBACK_MEDIA_SVG}';" />
+        <div class="cms-media-overlay" data-action="edit-card-media" data-sec-idx="${secIdx}" data-item-idx="${index}">
+          <span class="cms-media-btn">📷 CHANGER L'IMAGE</span>
+          <span class="cms-media-badge">${sanitize(imgSrc)}</span>
+        </div>
+      </div>` : '';
+
   return `
-    <div class="cell tool cms-card ${isHidden ? 'cms-card--hidden' : ''} ${isFull ? 'tool--has-detail' : 'tool--standard'}" 
+    <div class="cell tool cms-card ${isHidden ? 'cms-card--hidden' : ''} ${isFull ? 'tool--has-detail' : 'tool--standard'} ${!hasMedia ? 'tool--no-media' : ''}" 
          data-sec-idx="${secIdx}" 
          data-item-idx="${index}" 
          data-item-id="${sanitize(card.id)}">
       <div class="cms-card-toolbar">
         ${isFull ? `<button type="button" class="cms-tool-btn" data-action="open-card-detail" data-sec-idx="${secIdx}" data-item-idx="${index}" title="Ouvrir la vue détaillée & rédiger les notes">🔍 DÉTAILS</button>` : ''}
         <button type="button" class="cms-tool-btn cms-btn-toggle-full ${isFull ? 'is-full-active' : ''}" data-action="toggle-card-full" data-sec-idx="${secIdx}" data-item-idx="${index}" title="Activer / désactiver la vue détaillée">${isFull ? 'FULL' : 'STANDARD'}</button>
+        <button type="button" class="cms-tool-btn cms-btn-toggle-media ${!hasMedia ? 'is-off' : ''}" data-action="toggle-card-media" data-sec-idx="${secIdx}" data-item-idx="${index}" title="Afficher / Masquer l'image">${hasMedia ? 'IMG ON' : 'IMG OFF'}</button>
         <button type="button" class="cms-tool-btn cms-btn-move-card" data-action="move-card-prev" data-sec-idx="${secIdx}" data-item-idx="${index}" title="Déplacer à gauche" ${index === 0 ? 'disabled' : ''}>◄</button>
         <button type="button" class="cms-tool-btn cms-btn-move-card" data-action="move-card-next" data-sec-idx="${secIdx}" data-item-idx="${index}" title="Déplacer à droite" ${index === totalCards - 1 ? 'disabled' : ''}>►</button>
         <button type="button" class="cms-tool-btn cms-btn-toggle-card ${isHidden ? 'is-off' : ''}" data-action="toggle-card-visibility" data-sec-idx="${secIdx}" data-item-idx="${index}">
@@ -113,13 +128,7 @@ function buildCardEditableHTML(card, index, secIdx, totalCards) {
         <span class="dot idx">${String(index + 1).padStart(2, '0')}</span>
         ${isHidden ? '<span class="cms-tag-hidden">MASQUÉ</span>' : '<span class="cue"></span>'}
       </div>
-      <div class="card-media cms-card-media" data-action="edit-card-media" data-sec-idx="${secIdx}" data-item-idx="${index}" title="Cliquer pour changer l'image">
-        <img src="${sanitize(imgSrc)}" alt="${sanitize(displayTitle)}" loading="lazy" onerror="this.onerror=null; this.src='${FALLBACK_MEDIA_SVG}';" />
-        <div class="cms-media-overlay" data-action="edit-card-media" data-sec-idx="${secIdx}" data-item-idx="${index}">
-          <span class="cms-media-btn">📷 CHANGER L'IMAGE</span>
-          <span class="cms-media-badge">${sanitize(imgSrc)}</span>
-        </div>
-      </div>
+      ${mediaHTML}
       <div class="cell-body">
         <div class="card-content-block">
           <div class="name cms-editable" contenteditable="true" spellcheck="false" data-field="code" data-sec-idx="${secIdx}" data-item-idx="${index}">${sanitize(displayTitle)}</div>
@@ -200,7 +209,10 @@ function buildPageHTML(content, options = {}) {
           <span class="count">/ ${visibleItems.length}</span>
         </div>
         <div class="row">
-          ${visibleItems.map((card, idx) => buildCardVisitorHTML(card, idx, secIdx)).join('')}
+          ${visibleItems.map((card, visibleIdx) => {
+            const realIdx = items.indexOf(card);
+            return buildCardVisitorHTML(card, visibleIdx, secIdx, realIdx !== -1 ? realIdx : visibleIdx);
+          }).join('')}
         </div>
       `;
     }
@@ -215,41 +227,59 @@ function buildPageHTML(content, options = {}) {
     </div>
   ` : '';
 
+  // Définition des contenus des 2 premières cellules du header
+  const cell1Title = site.cell1Title || siteNamespace || 'BRICEMG';
+  const defaultCell1Body = `${siteType || 'STUDIO'}\n${site.subtitle || 'DESIGN / CODE / VISION'}\n\nINDEX V0.1\nLANGUAGE : FR`;
+  const cell1Body = site.cell1Body !== undefined ? site.cell1Body : defaultCell1Body;
+
+  const cell2Title = site.cell2Title || 'NOUS';
+  const defaultCell2Body = `CRÉER\n${site.intro || 'Je crée des interfaces, des identités visuelles et des expériences web qui donnent du sens à une idée.'}\n\nRÉFLEXION\nPENSER, CONCEVOIR ET DÉVELOPPER DE A À Z\n\nOBJECTIF\n${site.about || 'Je conçois et développe des projets à la croisée du design, du produit et du code.'}`;
+  const cell2Body = site.cell2Body !== undefined ? site.cell2Body : defaultCell2Body;
+
+  function formatMetaLines(rawText) {
+    if (!rawText) return '';
+    // Séparation par groupes (séparés par un ou plusieurs sauts de ligne vides)
+    const normalized = String(rawText).replace(/\r\n/g, '\n');
+    const groupBlocks = normalized.split(/\n\s*\n/);
+    
+    return groupBlocks.map(block => {
+      const lines = block.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+      if (lines.length === 0) return '';
+      const linesHTML = lines.map((line, idx) => {
+        const cls = idx === 0 ? 'meta-line--primary' : 'meta-line--sub';
+        return `<span class="${cls}">${sanitize(line)}</span>`;
+      }).join('');
+      return `<div class="meta-group">${linesHTML}</div>`;
+    }).join('');
+  }
+
   return `
     <div class="sheet ${isEditable ? 'sheet--editable' : ''}">
       <div class="row row--three">
         <div class="cell">
-          <div class="cell-top"><span class="dot title">${sanitize(siteNamespace)}</span></div>
+          <div class="cell-top">
+            <span class="dot title ${isEditable ? 'cms-editable' : ''}" ${isEditable ? 'contenteditable="true" spellcheck="false" data-field="site-cell1-title"' : ''}>${sanitize(cell1Title)}</span>
+          </div>
           <div class="cell-body">
-            <div class="meta">
-              <b>${sanitize(siteType)}</b>
-              ${sanitize(site.subtitle || 'DESIGN / CODE / VISION')}<br />
-              INDEX V0.1<br />
-              LANGUAGE : FR
+            <div class="cell-meta-list ${isEditable ? 'cms-editable' : ''}" ${isEditable ? 'contenteditable="true" spellcheck="false" data-field="site-cell1-body"' : ''}>
+              ${formatMetaLines(cell1Body)}
             </div>
           </div>
         </div>
         <div class="cell">
-          <div class="cell-top"><span class="dot title">NOUS</span></div>
+          <div class="cell-top">
+            <span class="dot title ${isEditable ? 'cms-editable' : ''}" ${isEditable ? 'contenteditable="true" spellcheck="false" data-field="site-cell2-title"' : ''}>${sanitize(cell2Title)}</span>
+          </div>
           <div class="cell-body">
-            <div class="meta">
-              <b>CRÉER</b>
-              ${sanitize(site.intro || '')}
-            </div>
-            <div class="meta">
-              <b>RÉFLEXION</b>
-              PENSER, CONCEVOIR ET DÉVELOPPER DE A À Z
-            </div>
-            <div class="meta">
-              <b>OBJECTIF</b>
-              ${sanitize(site.about || '')}
+            <div class="cell-meta-list ${isEditable ? 'cms-editable' : ''}" ${isEditable ? 'contenteditable="true" spellcheck="false" data-field="site-cell2-body"' : ''}>
+              ${formatMetaLines(cell2Body)}
             </div>
           </div>
         </div>
         <div class="cell cell--play" id="field">
           <div class="play" aria-hidden="true"><canvas></canvas></div>
           <div class="cell-body">
-            <p class="claim">${sanitize(site.heroClaim || '')}</p>
+            <p class="claim ${isEditable ? 'cms-editable' : ''}" ${isEditable ? 'contenteditable="true" spellcheck="false" data-field="site-hero-claim"' : ''}>${sanitize(site.heroClaim || '')}</p>
           </div>
         </div>
       </div>

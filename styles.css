@@ -158,6 +158,28 @@ img {
   display: block;
 }
 
+/* Uniform Cell Meta List (Chaque premier élément d'un groupe en var(--ink), suivantes en var(--ink-soft)) */
+.cell-meta-list {
+  font-size: calc(var(--base-font-size, 12px) * 0.96);
+  letter-spacing: calc(var(--letter-spacing, 0.02em) * 2.25);
+  line-height: 1.5;
+}
+
+.cell-meta-list .meta-group + .meta-group {
+  margin-top: 18px;
+}
+
+.cell-meta-list .meta-line--primary {
+  font-weight: 600;
+  color: var(--ink);
+  display: block;
+}
+
+.cell-meta-list .meta-line--sub {
+  color: var(--ink-soft);
+  display: block;
+}
+
 .faint {
   color: var(--ink-faint);
 }

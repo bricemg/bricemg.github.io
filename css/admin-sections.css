@@ -727,6 +727,16 @@ body:not(.cms-mode) {
   font-weight: 700;
 }
 
+.cms-btn-toggle-media {
+  letter-spacing: 0.05em;
+}
+
+.cms-btn-toggle-media.is-off {
+  background: rgba(224, 108, 117, 0.18);
+  color: #e06c75;
+  border-color: rgba(224, 108, 117, 0.45);
+}
+
 .cms-btn-delete-card:hover {
   background: var(--odp-red) !important;
   color: #ffffff !important;
@@ -818,6 +828,10 @@ body.cms-preview-mode .cms-media-overlay {
   color: #1b1d23;
   outline: 2px solid var(--odp-blue);
   box-shadow: 0 0 12px rgba(97, 175, 239, 0.4);
+}
+
+.cell-meta-list.cms-editable:focus span {
+  color: #1b1d23 !important;
 }
 
 .cms-card-edit-hint {

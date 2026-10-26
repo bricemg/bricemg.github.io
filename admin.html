@@ -257,30 +257,40 @@
             <input type="range" id="themeBorderRadiusRange" min="0" max="48" step="1" value="22" />
           </div>
         </div>
-        <!-- 5. INFORMATION DU SITE -->
+        <!-- 5. INFORMATION DU SITE & HEADER -->
         <div class="cms-sidebar-section">
-          <div class="cms-sidebar-section-title">Information du site</div>
+          <div class="cms-sidebar-section-title">En-tête (Cellules 1 & 2)</div>
           <div class="field">
-            <label>Nom du site</label>
-            <input id="siteTitle" type="text" value="BRICEMG / STUDIO" />
+            <label>Cellule 1 — Titre</label>
+            <input id="cell1Title" type="text" value="BRICEMG" />
           </div>
           <div class="field">
-            <label>Sous-titre</label>
-            <input id="siteSubtitle" type="text" value="DESIGN / CODE / VISION" />
+            <label>Cellule 1 — Contenu (Saut de ligne = nouveau groupe ; 1ère ligne du groupe = Ink, suivantes = Ink Soft)</label>
+            <textarea id="cell1Body" rows="6">STUDIO
+DESIGN / CODE / VISION
+
+INDEX V0.1
+LANGUAGE : FR</textarea>
           </div>
           <div class="field">
-            <label>Phrase d'accueil (Hero Claim)</label>
-            <textarea id="heroClaim">DES IDÉES QUI ONT UNE FORME, UNE VOIX ET UNE VITESSE.</textarea>
+            <label>Cellule 2 — Titre</label>
+            <input id="cell2Title" type="text" value="NOUS" />
           </div>
           <div class="field">
-            <label>Introduction</label>
-            <textarea
-              id="intro">Je crée des interfaces, des identités visuelles et des expériences web qui donnent du sens à une idée.</textarea>
+            <label>Cellule 2 — Contenu (Saut de ligne = nouveau groupe ; 1ère ligne du groupe = Ink, suivantes = Ink Soft)</label>
+            <textarea id="cell2Body" rows="8">CRÉER
+Je crée des interfaces, des identités visuelles et des expériences web qui donnent du sens à une idée.
+
+RÉFLEXION
+PENSER, CONCEVOIR ET DÉVELOPPER DE A À Z
+
+OBJECTIF
+Je conçois et développe des projets à la croisée du design, du produit et du code.</textarea>
           </div>
           <div class="field">
-            <label>À propos</label>
-            <textarea
-              id="about">Je conçois et développe des projets à la croisée du design, du produit et du code.</textarea>
+            <label>Cellule 3 — Phrase d'accueil (Hero Claim)</label>
+            <textarea id="heroClaim">From Idea to projects !
+visual / code / tools & stuff</textarea>
           </div>
           <div class="field">
             <label>Email de contact</label>
