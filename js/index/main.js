@@ -52,14 +52,14 @@
         imageEl.src = window.FALLBACK_MEDIA_SVG || 'media/_placeholder.png';
       };
       imageEl.src = card.image || 'media/_placeholder.png';
-      imageEl.alt = card.title || card.code || 'Aperçu';
+      imageEl.alt = card.title || card.code || 'Preview';
     }
-    if (codeEl) codeEl.textContent = card.code || 'PROJET';
+    if (codeEl) codeEl.textContent = card.code || 'PROJECT';
     if (descEl) descEl.textContent = card.desc || '';
-    if (typeEl) typeEl.textContent = card.type || 'IDENTITÉ';
+    if (typeEl) typeEl.textContent = card.type || 'IDENTITY';
     if (statusEl) statusEl.textContent = card.version || card.status || card.phase || 'v 0.1.0';
     if (longTextEl) {
-      const raw = card.details || card.desc || 'Présentation détaillée du projet en cours de rédaction au sein du studio BRICEMG.';
+      const raw = card.details || card.desc || 'Detailed presentation of the project currently in preparation at BRICEMG studio.';
       const formatDetailHtml = (window.storageUtils && window.storageUtils.formatDetailHtml) || window.formatDetailHtml;
       if (typeof formatDetailHtml === 'function') {
         longTextEl.innerHTML = formatDetailHtml(raw);

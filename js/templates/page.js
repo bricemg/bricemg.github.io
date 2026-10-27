@@ -7,48 +7,85 @@
     return div.innerHTML;
   };
 
-  function getSectionsList(content) {
-  if (content && content.sections && Array.isArray(content.sections) && content.sections.length > 0) {
-    return content.sections;
+  // Auto-linkify: preserves existing <a href> tags, turns plain emails into mailto: and plain URLs into clickable links
+  function autoLinkify(str) {
+    if (str === null || str === undefined) return '';
+    const source = String(str);
+    // 1. Extract existing <a> tags and replace with tokens
+    const links = [];
+    const withTokens = source.replace(
+      /<a\s+href\s*=\s*(["'])((?:https?:\/\/|mailto:)[^"'<>\s]+)\1[^>]*>([\s\S]*?)<\/a>/gi,
+      (_, _quote, href, label) => {
+        const token = `%%LINK_${links.length}%%`;
+        links.push({ href, label });
+        return token;
+      }
+    );
+    // 2. Sanitize the rest (escapes any remaining HTML)
+    let html = sanitize(withTokens);
+    // 3. Convert plain emails to mailto links
+    html = html.replace(/([a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,})/g,
+      '<a href="mailto:$1">$1</a>');
+    // 4. Convert plain URLs to clickable links
+    html = html.replace(/(https?:\/\/[^\s<]+)/gi, (match) => {
+      const trailing = match.match(/[.,;:!?)]+$/);
+      const suffix = trailing ? trailing[0] : '';
+      const url = suffix ? match.slice(0, -suffix.length) : match;
+      return `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>${suffix}`;
+    });
+    // 5. Restore extracted <a> tags
+    links.forEach((link, i) => {
+      const isMail = link.href.startsWith('mailto:');
+      const attrs = isMail ? '' : ' target="_blank" rel="noopener noreferrer"';
+      html = html.split(`%%LINK_${i}%%`).join(
+        `<a href="${sanitize(link.href)}"${attrs}>${sanitize(link.label)}</a>`
+      );
+    });
+    return html;
   }
-  const cards = (content && content.cards) || [];
-  const projects = (content && content.projects) || [];
-  return [
-    {
-      id: 'atelier',
-      letter: 'A',
-      title: 'ATELIER',
-      visible: true,
-      items: cards.map(c => ({ ...c, visible: c.visible !== false, status: c.status || 'ACTIF' }))
-    },
-    {
-      id: 'projets',
-      letter: 'B',
-      title: 'PROJETS',
-      visible: true,
-      items: projects.map(p => ({ ...p, visible: p.visible !== false, status: p.status || p.phase || 'EN COURS' }))
+
+  function getSectionsList(content) {
+    if (content && content.sections && Array.isArray(content.sections) && content.sections.length > 0) {
+      return content.sections;
     }
-  ];
-}
+    const cards = (content && content.cards) || [];
+    const projects = (content && content.projects) || [];
+    return [
+      {
+        id: 'atelier',
+        letter: 'A',
+        title: 'WORKSHOP',
+        visible: true,
+        items: cards.map(c => ({ ...c, visible: c.visible !== false, status: c.status || 'ACTIVE' }))
+      },
+      {
+        id: 'projets',
+        letter: 'B',
+        title: 'PROJECTS',
+        visible: true,
+        items: projects.map(p => ({ ...p, visible: p.visible !== false, status: p.status || p.phase || 'IN PROGRESS' }))
+      }
+    ];
+  }
 
-const FALLBACK_MEDIA_SVG = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 500'%3E%3Crect width='100%25' height='100%25' fill='%23120f24'/%3E%3Cpath d='M0 0l800 500M800 0L0 500' stroke='%232c1f51' stroke-width='1.5' stroke-dasharray='8 8'/%3E%3Ccircle cx='400' cy='250' r='44' fill='none' stroke='%23e17f0e' stroke-width='2'/%3E%3Ctext x='50%25' y='52%25' dominant-baseline='middle' text-anchor='middle' fill='%23afa6e3' font-family='monospace' font-size='13' letter-spacing='3'%3EBRICEMG / MEDIA%3C/text%3E%3C/svg%3E";
-window.FALLBACK_MEDIA_SVG = FALLBACK_MEDIA_SVG;
+  const FALLBACK_MEDIA_SVG = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 500'%3E%3Crect width='100%25' height='100%25' fill='%23120f24'/%3E%3Cpath d='M0 0l800 500M800 0L0 500' stroke='%232c1f51' stroke-width='1.5' stroke-dasharray='8 8'/%3E%3Ccircle cx='400' cy='250' r='44' fill='none' stroke='%23e17f0e' stroke-width='2'/%3E%3Ctext x='50%25' y='52%25' dominant-baseline='middle' text-anchor='middle' fill='%23afa6e3' font-family='monospace' font-size='13' letter-spacing='3'%3EBRICEMG / MEDIA%3C/text%3E%3C/svg%3E";
+  window.FALLBACK_MEDIA_SVG = FALLBACK_MEDIA_SVG;
 
-function buildCardVisitorHTML(card, displayIndex, secIdx, realIndex) {
-  const itemIdx = (realIndex !== undefined && realIndex !== null) ? realIndex : displayIndex;
-  const imgSrc = card.image || 'media/_placeholder.png';
-  const displayTitle = card.code || card.title || 'BRAND';
-  const displayVersion = card.version || card.status || card.phase || 'v 0.1.0';
-  const isFull = card.full === true || card.hasDetail === true;
-  const hasMedia = card.showMedia !== false;
+  function buildCardVisitorHTML(card, displayIndex, secIdx, realIndex) {
+    const itemIdx = (realIndex !== undefined && realIndex !== null) ? realIndex : displayIndex;
+    const imgSrc = card.image || 'media/_placeholder.png';
+    const displayTitle = card.code || card.title || 'BRAND';
+    const displayVersion = card.version || card.status || card.phase || 'v 0.1.0';
+    const isFull = card.full === true || card.hasDetail === true;
+    const hasMedia = card.showMedia !== false;
 
-  const mediaHTML = hasMedia ? `
+    const mediaHTML = hasMedia ? `
         <div class="card-media">
           <img src="${sanitize(imgSrc)}" alt="${sanitize(displayTitle)}" loading="lazy" onerror="this.onerror=null; this.src='${FALLBACK_MEDIA_SVG}';" />
         </div>` : '';
 
-  if (isFull) {
-    return `
+    if (isFull) {
+      return `
       <a class="cell tool tool--has-detail ${!hasMedia ? 'tool--no-media' : ''}" data-tool="${sanitize(card.id)}" data-card-id="${sanitize(card.id)}" data-sec-idx="${secIdx ?? ''}" data-item-idx="${itemIdx}" data-display-idx="${displayIndex}" data-action="open-card-detail" href="javascript:void(0);" target="_self">
         <div class="cell-top">
           <span class="dot idx">${String(displayIndex + 1).padStart(2, '0')}</span>
@@ -61,16 +98,16 @@ function buildCardVisitorHTML(card, displayIndex, secIdx, realIndex) {
             <div class="desc">${sanitize(card.desc || '')}</div>
           </div>
           <dl class="dates">
-            <div><dt>TYPE</dt><dd>${sanitize(card.type || 'IDENTITÉ')}</dd></div>
+            <div><dt>TYPE</dt><dd>${sanitize(card.type || 'IDENTITY')}</dd></div>
             <div><dt>VERSION</dt><dd>${sanitize(displayVersion)}</dd></div>
           </dl>
-          <div class="go">VOIR EN DÉTAIL<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3.5 8.5 8.5 3.5M4.5 3.5H8.5V7.5" fill="none" stroke="currentColor" stroke-width="1.4"/></svg></div>
+          <div class="go">VIEW DETAILS<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3.5 8.5 8.5 3.5M4.5 3.5H8.5V7.5" fill="none" stroke="currentColor" stroke-width="1.4"/></svg></div>
         </div>
       </a>
     `;
-  }
+    }
 
-  return `
+    return `
     <div class="cell tool tool--standard ${!hasMedia ? 'tool--no-media' : ''}" data-tool="${sanitize(card.id)}" data-card-id="${sanitize(card.id)}" data-sec-idx="${secIdx ?? ''}" data-item-idx="${itemIdx}" data-display-idx="${displayIndex}">
       <div class="cell-top">
         <span class="dot idx">${String(displayIndex + 1).padStart(2, '0')}</span>
@@ -83,23 +120,23 @@ function buildCardVisitorHTML(card, displayIndex, secIdx, realIndex) {
           <div class="desc">${sanitize(card.desc || '')}</div>
         </div>
         <dl class="dates">
-          <div><dt>TYPE</dt><dd>${sanitize(card.type || 'IDENTITÉ')}</dd></div>
+          <div><dt>TYPE</dt><dd>${sanitize(card.type || 'IDENTITY')}</dd></div>
           <div><dt>VERSION</dt><dd>${sanitize(displayVersion)}</dd></div>
         </dl>
       </div>
     </div>
   `;
-}
+  }
 
-function buildCardEditableHTML(card, index, secIdx, totalCards) {
-  const isHidden = card.visible === false;
-  const isFull = card.full === true || card.hasDetail === true;
-  const hasMedia = card.showMedia !== false;
-  const imgSrc = card._tempPreview || card.image || 'media/_placeholder.png';
-  const displayTitle = card.code || card.title || 'BRAND';
-  const displayVersion = card.version || card.status || card.phase || 'v 0.1.0';
+  function buildCardEditableHTML(card, index, secIdx, totalCards) {
+    const isHidden = card.visible === false;
+    const isFull = card.full === true || card.hasDetail === true;
+    const hasMedia = card.showMedia !== false;
+    const imgSrc = card._tempPreview || card.image || 'media/_placeholder.png';
+    const displayTitle = card.code || card.title || 'BRAND';
+    const displayVersion = card.version || card.status || card.phase || 'v 0.1.0';
 
-  const mediaHTML = hasMedia ? `
+    const mediaHTML = hasMedia ? `
       <div class="card-media cms-card-media" data-action="edit-card-media" data-sec-idx="${secIdx}" data-item-idx="${index}" title="Cliquer pour changer l'image">
         <img src="${sanitize(imgSrc)}" alt="${sanitize(displayTitle)}" loading="lazy" onerror="this.onerror=null; this.src='${FALLBACK_MEDIA_SVG}';" />
         <div class="cms-media-overlay" data-action="edit-card-media" data-sec-idx="${secIdx}" data-item-idx="${index}">
@@ -108,7 +145,7 @@ function buildCardEditableHTML(card, index, secIdx, totalCards) {
         </div>
       </div>` : '';
 
-  return `
+    return `
     <div class="cell tool cms-card ${isHidden ? 'cms-card--hidden' : ''} ${isFull ? 'tool--has-detail' : 'tool--standard'} ${!hasMedia ? 'tool--no-media' : ''}" 
          data-sec-idx="${secIdx}" 
          data-item-idx="${index}" 
@@ -137,46 +174,46 @@ function buildCardEditableHTML(card, index, secIdx, totalCards) {
         <dl class="dates">
           <div>
             <dt>TYPE</dt>
-            <dd class="cms-editable" contenteditable="true" spellcheck="false" data-field="type" data-sec-idx="${secIdx}" data-item-idx="${index}">${sanitize(card.type || 'IDENTITÉ')}</dd>
+            <dd class="cms-editable" contenteditable="true" spellcheck="false" data-field="type" data-sec-idx="${secIdx}" data-item-idx="${index}">${sanitize(card.type || 'IDENTITY')}</dd>
           </div>
           <div>
             <dt>VERSION</dt>
             <dd class="cms-editable" contenteditable="true" spellcheck="false" data-field="version" data-sec-idx="${secIdx}" data-item-idx="${index}">${sanitize(displayVersion)}</dd>
           </div>
         </dl>
-        ${isFull ? `<div class="go cms-btn-detail-trigger" data-action="open-card-detail" data-sec-idx="${secIdx}" data-item-idx="${index}" style="cursor: pointer;">VOIR EN DÉTAIL<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3.5 8.5 8.5 3.5M4.5 3.5H8.5V7.5" fill="none" stroke="currentColor" stroke-width="1.4"/></svg></div>` : ''}
+        ${isFull ? `<div class="go cms-btn-detail-trigger" data-action="open-card-detail" data-sec-idx="${secIdx}" data-item-idx="${index}" style="cursor: pointer;">VIEW DETAILS<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3.5 8.5 8.5 3.5M4.5 3.5H8.5V7.5" fill="none" stroke="currentColor" stroke-width="1.4"/></svg></div>` : ''}
       </div>
     </div>
   `;
-}
+  }
 
-function buildPageHTML(content, options = {}) {
-  const isEditable = Boolean(options.isEditable);
-  const site = (content && content.site) || {};
-  const siteTitleParts = (site.title || 'BRICEMG / STUDIO').split(' / ');
-  const siteNamespace = siteTitleParts[0] || 'BRICEMG';
-  const siteType = siteTitleParts[1] || 'STUDIO';
+  function buildPageHTML(content, options = {}) {
+    const isEditable = Boolean(options.isEditable);
+    const site = (content && content.site) || {};
+    const siteTitleParts = (site.title || 'BRICEMG / STUDIO').split(' / ');
+    const siteNamespace = siteTitleParts[0] || 'BRICEMG';
+    const siteType = siteTitleParts[1] || 'STUDIO';
 
-  const footer = (content && content.footer) || {
-    col1: siteNamespace,
-    col2: site.subtitle || 'DESIGN / CODE / VISION',
-    col3: 'DESIGN / CODE / VISION',
-    col4: site.email || 'bonjour@bricemg.dev',
-    col5: '© 2026'
-  };
+    const footer = (content && content.footer) || {
+      col1: siteNamespace,
+      col2: site.subtitle || 'DESIGN / CODE / VISION',
+      col3: 'DESIGN / CODE / VISION',
+      col4: site.email || 'bonjour@bricemg.dev',
+      col5: '© 2026'
+    };
 
-  const sections = getSectionsList(content);
-  let sectionsHTML = '';
+    const sections = getSectionsList(content);
+    let sectionsHTML = '';
 
-  sections.forEach((sec, secIdx) => {
-    const isSectionHidden = sec.visible === false;
-    if (!isEditable && isSectionHidden) return;
+    sections.forEach((sec, secIdx) => {
+      const isSectionHidden = sec.visible === false;
+      if (!isEditable && isSectionHidden) return;
 
-    const items = sec.items || [];
-    const visibleItems = items.filter(i => i.visible !== false);
+      const items = sec.items || [];
+      const visibleItems = items.filter(i => i.visible !== false);
 
-    if (isEditable) {
-      sectionsHTML += `
+      if (isEditable) {
+        sectionsHTML += `
         <div class="bar cms-bar ${isSectionHidden ? 'cms-bar--hidden' : ''}" data-sec-idx="${secIdx}">
           <div class="cms-bar-left">
             <span class="dot bar-letter cms-editable" contenteditable="true" spellcheck="false" data-action="edit-sec-letter" data-sec-idx="${secIdx}">${sanitize(sec.letter || 'A')}</span>
@@ -201,8 +238,8 @@ function buildPageHTML(content, options = {}) {
           </div>
         </div>
       `;
-    } else {
-      sectionsHTML += `
+      } else {
+        sectionsHTML += `
         <div class="bar">
           <span class="dot">${sanitize(sec.letter || 'A')}</span>
           <h2>${sanitize(sec.title || 'SECTION')}</h2>
@@ -210,16 +247,16 @@ function buildPageHTML(content, options = {}) {
         </div>
         <div class="row">
           ${visibleItems.map((card, visibleIdx) => {
-            const realIdx = items.indexOf(card);
-            return buildCardVisitorHTML(card, visibleIdx, secIdx, realIdx !== -1 ? realIdx : visibleIdx);
-          }).join('')}
+          const realIdx = items.indexOf(card);
+          return buildCardVisitorHTML(card, visibleIdx, secIdx, realIdx !== -1 ? realIdx : visibleIdx);
+        }).join('')}
         </div>
       `;
-    }
-  });
+      }
+    });
 
-  // Bouton d'ajout de section complète (affiché uniquement en mode édition)
-  const addSectionRowHTML = isEditable ? `
+    // Bouton d'ajout de section complète (affiché uniquement en mode édition)
+    const addSectionRowHTML = isEditable ? `
     <div class="cms-add-section-wrapper">
       <button type="button" class="cms-btn-add-section" data-action="add-section">
         + AJOUTER UNE NOUVELLE SECTION
@@ -227,33 +264,34 @@ function buildPageHTML(content, options = {}) {
     </div>
   ` : '';
 
-  // Définition des contenus des 2 premières cellules du header
-  const cell1Title = site.cell1Title || siteNamespace || 'BRICEMG';
-  const defaultCell1Body = `${siteType || 'STUDIO'}\n${site.subtitle || 'DESIGN / CODE / VISION'}\n\nINDEX V0.1\nLANGUAGE : FR`;
-  const cell1Body = site.cell1Body !== undefined ? site.cell1Body : defaultCell1Body;
+    // Définition des contenus des 2 premières cellules du header
+    const cell1Title = site.cell1Title || siteNamespace || 'BRICEMG';
+    const defaultCell1Body = `${siteType || 'STUDIO'}\n${site.subtitle || 'DESIGN / CODE / VISION'}\n\nINDEX V0.1\nLANGUAGE : EN`;
+    const cell1Body = site.cell1Body !== undefined ? site.cell1Body : defaultCell1Body;
 
-  const cell2Title = site.cell2Title || 'NOUS';
-  const defaultCell2Body = `CRÉER\n${site.intro || 'Je crée des interfaces, des identités visuelles et des expériences web qui donnent du sens à une idée.'}\n\nRÉFLEXION\nPENSER, CONCEVOIR ET DÉVELOPPER DE A À Z\n\nOBJECTIF\n${site.about || 'Je conçois et développe des projets à la croisée du design, du produit et du code.'}`;
-  const cell2Body = site.cell2Body !== undefined ? site.cell2Body : defaultCell2Body;
+    const cell2Title = site.cell2Title || 'ABOUT';
+    const defaultCell2Body = `CREATE\n${site.intro || 'I create interfaces, visual identities, and web experiences that bring meaning to an idea.'}\n\nTHINKING\nDESIGN, CRAFT AND DEVELOP FROM END TO END\n\nOBJECTIVE\n${site.about || 'I craft and build projects at the crossroads of design, product, and code.'}`;
+    const cell2Body = site.cell2Body !== undefined ? site.cell2Body : defaultCell2Body;
 
-  function formatMetaLines(rawText) {
-    if (!rawText) return '';
-    // Séparation par groupes (séparés par un ou plusieurs sauts de ligne vides)
-    const normalized = String(rawText).replace(/\r\n/g, '\n');
-    const groupBlocks = normalized.split(/\n\s*\n/);
-    
-    return groupBlocks.map(block => {
-      const lines = block.split('\n').map(l => l.trim()).filter(l => l.length > 0);
-      if (lines.length === 0) return '';
-      const linesHTML = lines.map((line, idx) => {
-        const cls = idx === 0 ? 'meta-line--primary' : 'meta-line--sub';
-        return `<span class="${cls}">${sanitize(line)}</span>`;
+    function formatMetaLines(rawText) {
+      if (!rawText) return '';
+      // Séparation par groupes (séparés par un ou plusieurs sauts de ligne vides)
+      const normalized = String(rawText).replace(/\r\n/g, '\n');
+      const groupBlocks = normalized.split(/\n\s*\n/);
+      const transform = isEditable ? sanitize : autoLinkify;
+
+      return groupBlocks.map(block => {
+        const lines = block.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+        if (lines.length === 0) return '';
+        const linesHTML = lines.map((line, idx) => {
+          const cls = idx === 0 ? 'meta-line--primary' : 'meta-line--sub';
+          return `<span class="${cls}">${transform(line)}</span>`;
+        }).join('');
+        return `<div class="meta-group">${linesHTML}</div>`;
       }).join('');
-      return `<div class="meta-group">${linesHTML}</div>`;
-    }).join('');
-  }
+    }
 
-  return `
+    return `
     <div class="sheet ${isEditable ? 'sheet--editable' : ''}">
       <div class="row row--three">
         <div class="cell">
@@ -289,21 +327,23 @@ function buildPageHTML(content, options = {}) {
         <span>${sanitize(footer.col1 || 'BRICEMG')}</span>
         <span>${sanitize(footer.col2 || '')}</span>
         <span>${sanitize(footer.col3 || '')}</span>
-        <span>${sanitize(footer.col4 || '')}</span>
+        <span>${autoLinkify(footer.col4 || '')}</span>
         <span>${sanitize(footer.col5 || '© 2026')}</span>
       </div>
     </div>
     ${buildCardDetailModalHTML(isEditable)}
-    ${!isEditable ? '<a href="admin.html" class="cms-link">CMS</a>' : ''}
   `;
-}
+  }
 
-function buildCardDetailModalHTML(isEditable) {
-  return `
+  // Pour remettre le lien vers le CMS
+  // ${!isEditable ? '<a href="admin.html" class="cms-link">CMS</a>' : ''} sous ${buildCardDetailModalHTML(isEditable)} ^
+
+  function buildCardDetailModalHTML(isEditable) {
+    return `
     <div id="cardDetailModal" class="card-detail-backdrop" role="dialog" aria-modal="true" aria-hidden="true">
       <div class="card-detail-dialog">
         <div class="cell card-detail-card">
-          <button type="button" class="card-detail-close-btn" id="cardDetailCloseBtn" aria-label="Fermer la vue détaillée">
+          <button type="button" class="card-detail-close-btn" id="cardDetailCloseBtn" aria-label="Close detail view">
             <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
               <line x1="18" y1="6" x2="6" y2="18"></line>
               <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -318,16 +358,16 @@ function buildCardDetailModalHTML(isEditable) {
           </div>
 
           <div class="card-detail-media">
-            <img id="detailCardImage" src="media/_placeholder.png" alt="Aperçu du projet" onerror="this.onerror=null; this.src='${FALLBACK_MEDIA_SVG}';" />
+            <img id="detailCardImage" src="media/_placeholder.png" alt="Project preview" onerror="this.onerror=null; this.src='${FALLBACK_MEDIA_SVG}';" />
           </div>
 
           <div class="card-content-block">
             <h2 class="card-detail-title ${isEditable ? 'cms-editable' : ''}" id="detailCardTitle" ${isEditable ? 'contenteditable="true" spellcheck="false" data-field="code"' : ''}>BRAND</h2>
-            <div class="desc ${isEditable ? 'cms-editable' : ''}" id="detailCardDesc" ${isEditable ? 'contenteditable="true" spellcheck="false" data-field="desc"' : ''}>Logo, charte graphique, guidelines, visual system.</div>
+            <div class="desc ${isEditable ? 'cms-editable' : ''}" id="detailCardDesc" ${isEditable ? 'contenteditable="true" spellcheck="false" data-field="desc"' : ''}>Logo, brand guidelines, visual system.</div>
           </div>
 
           <dl class="dates card-detail-dates">
-            <div><dt>TYPE</dt><dd class="${isEditable ? 'cms-editable' : ''}" id="detailCardType" ${isEditable ? 'contenteditable="true" spellcheck="false" data-field="type"' : ''}>Identité</dd></div>
+            <div><dt>TYPE</dt><dd class="${isEditable ? 'cms-editable' : ''}" id="detailCardType" ${isEditable ? 'contenteditable="true" spellcheck="false" data-field="type"' : ''}>IDENTITY</dd></div>
             <div><dt>VERSION</dt><dd class="${isEditable ? 'cms-editable' : ''}" id="detailCardStatus" ${isEditable ? 'contenteditable="true" spellcheck="false" data-field="version"' : ''}>v 0.1.3</dd></div>
           </dl>
 
@@ -340,7 +380,7 @@ function buildCardDetailModalHTML(isEditable) {
       </div>
     </div>
   `;
-}
+  }
 
   window.templates = {
     buildCardHTML: buildCardVisitorHTML,

@@ -259,44 +259,42 @@
         </div>
         <!-- 5. INFORMATION DU SITE & HEADER -->
         <div class="cms-sidebar-section">
-          <div class="cms-sidebar-section-title">En-tête (Cellules 1 & 2)</div>
+          <div class="cms-sidebar-section-title">En-tête</div>
           <div class="field">
             <label>Cellule 1 — Titre</label>
             <input id="cell1Title" type="text" value="BRICEMG" />
           </div>
           <div class="field">
-            <label>Cellule 1 — Contenu (Saut de ligne = nouveau groupe ; 1ère ligne du groupe = Ink, suivantes = Ink Soft)</label>
+            <label>Cellule 1 — Contenu (Saut de ligne = nouveau groupe ; 1ère ligne du groupe = Ink, suivantes = Ink
+              Soft)</label>
             <textarea id="cell1Body" rows="6">STUDIO
 DESIGN / CODE / VISION
 
 INDEX V0.1
-LANGUAGE : FR</textarea>
+LANGUAGE : EN</textarea>
           </div>
           <div class="field">
             <label>Cellule 2 — Titre</label>
-            <input id="cell2Title" type="text" value="NOUS" />
+            <input id="cell2Title" type="text" value="ABOUT" />
           </div>
           <div class="field">
-            <label>Cellule 2 — Contenu (Saut de ligne = nouveau groupe ; 1ère ligne du groupe = Ink, suivantes = Ink Soft)</label>
-            <textarea id="cell2Body" rows="8">CRÉER
-Je crée des interfaces, des identités visuelles et des expériences web qui donnent du sens à une idée.
+            <label>Cellule 2 — Contenu (Saut de ligne = nouveau groupe ; 1ère ligne du groupe = Ink, suivantes = Ink
+              Soft)</label>
+            <textarea id="cell2Body" rows="8">CREATE
+I create interfaces, visual identities, and web experiences that bring meaning to an idea.
 
-RÉFLEXION
-PENSER, CONCEVOIR ET DÉVELOPPER DE A À Z
+THINKING
+DESIGN, CRAFT AND DEVELOP FROM END TO END
 
-OBJECTIF
-Je conçois et développe des projets à la croisée du design, du produit et du code.</textarea>
+OBJECTIVE
+I craft and build projects at the crossroads of design, product, and code.</textarea>
           </div>
           <div class="field">
             <label>Cellule 3 — Phrase d'accueil (Hero Claim)</label>
             <textarea id="heroClaim">From Idea to projects !
 visual / code / tools & stuff</textarea>
           </div>
-          <div class="field">
-            <label>Email de contact</label>
-            <input id="email" type="email" value="bonjour@bricemg.dev" />
-          </div>
-          <label class="cms-field-sub">Pied de page (Footer)</label>
+          <label class="cms-sidebar-section-title">Pied de page (Footer)</label>
           <div class="field">
             <label>Footer - Colonne 1</label>
             <input id="footerCol1" type="text" value="BRICEMG" />
@@ -342,10 +340,12 @@ visual / code / tools & stuff</textarea>
       <div class="cms-modal-box" style="max-width: 480px;">
         <div class="cms-modal-tag">DOSSIER MEDIA / WORKFLOW</div>
         <h4 id="mediaModalTitle" class="cms-modal-title">IMAGE DE LA CARTE</h4>
-        
+
         <div class="cms-media-info-box">
           <div class="cms-media-info-preview">
-            <img id="mediaModalPreview" src="media/_placeholder.png" alt="Aperçu" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 80 50\'%3E%3Crect width=\'100%25\' height=\'100%25\' fill=\'%23120f24\'/%3E%3Ctext x=\'50%25\' y=\'52%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%23afa6e3\' font-family=\'monospace\' font-size=\'8\'%3EMEDIA%3C/text%3E%3C/svg%3E';" />
+            <img id="mediaModalPreview" src="media/_placeholder.png" alt="Aperçu"
+              style="width: 100%; height: 100%; object-fit: cover;"
+              onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 80 50\'%3E%3Crect width=\'100%25\' height=\'100%25\' fill=\'%23120f24\'/%3E%3Ctext x=\'50%25\' y=\'52%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%23afa6e3\' font-family=\'monospace\' font-size=\'8\'%3EMEDIA%3C/text%3E%3C/svg%3E';" />
           </div>
           <div style="min-width: 0; flex: 1;">
             <div class="cms-media-info-label">Emplacement dans media/</div>
@@ -356,23 +356,29 @@ visual / code / tools & stuff</textarea>
         <div class="field" style="margin-bottom: 14px;">
           <label style="margin-bottom: 6px;">1. Choisir un fichier depuis votre appareil</label>
           <input type="file" id="mediaModalFileInput" accept="image/*" style="display: none;" />
-          <button type="button" id="mediaModalBrowseBtn" class="cms-sidebar-btn" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
+          <button type="button" id="mediaModalBrowseBtn" class="cms-sidebar-btn"
+            style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
             <span>📁</span>
             <span>Parcourir les fichiers images...</span>
           </button>
         </div>
 
         <div class="field" style="margin-bottom: 14px;">
-          <label for="mediaModalPathInput" style="margin-bottom: 6px;">2. Ou nom / chemin du fichier dans [media]</label>
-          <input type="text" id="mediaModalPathInput" value="media/_placeholder.png" placeholder="media/mon-image.png" />
+          <label for="mediaModalPathInput" style="margin-bottom: 6px;">2. Ou nom / chemin du fichier dans
+            [media]</label>
+          <input type="text" id="mediaModalPathInput" value="media/_placeholder.png"
+            placeholder="media/mon-image.png" />
         </div>
 
         <div class="cms-media-tip-box">
           <strong style="color: var(--odp-fg-bright);">Rappel Déploiement Git / GitHub Pages :</strong>
-          <br />• Placez le fichier dans le dossier <code>media/</code> local puis commitez-le (<code>git add media/</code>).
-          <br />• Le fichier <code>.nojekyll</code> à la racine garantit que GitHub Pages publie tous vos fichiers, y compris ceux commençant par un underscore (<code>_nuage.png</code>).
+          <br />• Placez le fichier dans le dossier <code>media/</code> local puis commitez-le
+          (<code>git add media/</code>).
+          <br />• Le fichier <code>.nojekyll</code> à la racine garantit que GitHub Pages publie tous vos fichiers, y
+          compris ceux commençant par un underscore (<code>_nuage.png</code>).
           <div id="mediaModalDownloadWrap" style="margin-top: 10px; display: none;">
-            <button type="button" id="mediaModalDownloadBtn" class="cms-sidebar-btn" style="width: auto; padding: 6px 12px; font-size: 10px;">
+            <button type="button" id="mediaModalDownloadBtn" class="cms-sidebar-btn"
+              style="width: auto; padding: 6px 12px; font-size: 10px;">
               ⬇ Télécharger une copie pour le dossier media/
             </button>
           </div>
@@ -380,7 +386,8 @@ visual / code / tools & stuff</textarea>
 
         <div class="cms-modal-actions">
           <button id="mediaModalCancelBtn" type="button" class="secondary">Annuler</button>
-          <button id="mediaModalSaveBtn" type="button" class="cms-modal-confirm-btn" style="background: var(--odp-blue) !important; color: #1e2227 !important;">Appliquer à la carte</button>
+          <button id="mediaModalSaveBtn" type="button" class="cms-modal-confirm-btn"
+            style="background: var(--odp-blue) !important; color: #1e2227 !important;">Appliquer à la carte</button>
         </div>
       </div>
     </div>

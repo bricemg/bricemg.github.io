@@ -523,18 +523,16 @@
     const claimEl = document.getElementById('heroClaim');
     const introEl = document.getElementById('intro');
     const aboutEl = document.getElementById('about');
-    const emailEl = document.getElementById('email');
 
     if (titleEl) titleEl.value = site.title || 'BRICEMG / STUDIO';
     if (subtitleEl) subtitleEl.value = site.subtitle || 'DESIGN / CODE / VISION';
     if (cell1TitleEl) cell1TitleEl.value = site.cell1Title || 'BRICEMG';
-    if (cell1BodyEl) cell1BodyEl.value = site.cell1Body !== undefined ? site.cell1Body : 'STUDIO\nDESIGN / CODE / VISION\nINDEX V0.1\nLANGUAGE : FR';
-    if (cell2TitleEl) cell2TitleEl.value = site.cell2Title || 'NOUS';
-    if (cell2BodyEl) cell2BodyEl.value = site.cell2Body !== undefined ? site.cell2Body : 'CRÉER\nJe crée des interfaces, des identités visuelles et des expériences web qui donnent du sens à une idée.\nRÉFLEXION\nPENSER, CONCEVOIR ET DÉVELOPPER DE A À Z\nOBJECTIF\nJe conçois et développe des projets à la croisée du design, du produit et du code.';
+    if (cell1BodyEl) cell1BodyEl.value = site.cell1Body !== undefined ? site.cell1Body : 'STUDIO\nDESIGN / CODE / VISION\nINDEX V0.1\nLANGUAGE : EN';
+    if (cell2TitleEl) cell2TitleEl.value = site.cell2Title || 'ABOUT';
+    if (cell2BodyEl) cell2BodyEl.value = site.cell2Body !== undefined ? site.cell2Body : 'CREATE\nJe crée des interfaces, des identités visuelles et des expériences web qui donnent du sens à une idée.\nRÉFLEXION\nPENSER, CONCEVOIR ET DÉVELOPPER DE A À Z\nOBJECTIF\nJe conçois et développe des projets à la croisée du design, du produit et du code.';
     if (claimEl) claimEl.value = site.heroClaim || '';
     if (introEl) introEl.value = site.intro || '';
     if (aboutEl) aboutEl.value = site.about || '';
-    if (emailEl) emailEl.value = site.email || 'bonjour@bricemg.dev';
 
     const footer = currentContent.footer || {};
     const f1 = document.getElementById('footerCol1');
@@ -562,7 +560,6 @@
     currentContent.site.cell2Title = cell2TitleVal;
     currentContent.site.cell2Body = cell2BodyVal;
     currentContent.site.heroClaim = document.getElementById('heroClaim')?.value.trim() || '';
-    currentContent.site.email = document.getElementById('email')?.value.trim() || 'bonjour@bricemg.dev';
     if (document.getElementById('siteTitle')) {
       currentContent.site.title = document.getElementById('siteTitle').value.trim();
     }
@@ -663,7 +660,7 @@
 
     [
       'cell1Title', 'cell1Body', 'cell2Title', 'cell2Body',
-      'siteTitle', 'siteSubtitle', 'heroClaim', 'intro', 'about', 'email',
+      'siteTitle', 'siteSubtitle', 'heroClaim', 'intro', 'about',
       'plateFLabel', 'plateFText1', 'plateFText2',
       'plateGLabel', 'plateGText1', 'plateGText2',
       'plateHLabel', 'plateHText',
