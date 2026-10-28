@@ -9,7 +9,7 @@
 gitBriceMG/
 │
 ├─ index.html                 ← page publique (visiteur)
-├─ admin.html                 ← CMS / WYSIWYG (édition du site)
+├─ noAdmin.html               ← CMS / WYSIWYG (édition du site)
 ├─ content.json               ← source de données du site (texte, métadonnées)
 ├─ styles.css                 ← design‑system (tokens, palette, typographies)
 │
@@ -39,7 +39,7 @@ gitBriceMG/
 flowchart TD
     %% Pages
     Index["index.html<br/>(page visiteur)"]
-    Admin["admin.html<br/>(CMS / WYSIWYG)"]
+    Admin["noAdmin.html<br/>(CMS / WYSIWYG)"]
     JSON["content.json<br/>(données du site)"]
     CSS["styles.css<br/>(design‑system)"]
     
@@ -93,7 +93,7 @@ flowchart TD
 | Composant | Rôle principal | Points d’attention / amélioration |
 |-----------|----------------|-----------------------------------|
 | **index.html** | Page publique : charge le site, affiche les cartes, animations, navigation. | - Séparer le markup statique du rendu dynamique (`<template>` ou `shadow DOM`) pour faciliter le test unitaire.<br>- Ajouter des attributs ARIA/SEO (`<main>`, `<section>`, `<h1>` unique). |
-| **admin.html** | Interface CMS : permet d’éditer le thème, le contenu, de prévisualiser le résultat. | - Actuellement tout le CSS est partagé ; penser à un *theme‑preview* isolé.<br>- Sécuriser la sauvegarde (validation du JSON avant `localStorage`). |
+| **noAdmin.html** | Interface CMS : permet d’éditer le thème, le contenu, de prévisualiser le résultat. | - Actuellement tout le CSS est partagé ; penser à un *theme‑preview* isolé.<br>- Sécuriser la sauvegarde (validation du JSON avant `localStorage`). |
 | **content.json** | Source unique de texte, titres, métadonnées, liens, couleurs par défaut. | - Structure déjà claire ; envisager un schéma JSON‑Schema pour validation automatisée.<br>- Possibilité d’ajouter une couche *i18n* (langues). |
 | **styles.css** | Design‑system : variables CSS (`--bg-start`, `--ink`, `--r`, …) ; composants UI (cards, bar, foot, etc.). | - Centraliser les variables dans `:root` ✅, mais envisager un pré‑processus (Sass/PostCSS) pour gérer les thèmes multiples.<br>- Documenter chaque token (commentaire + lien design). |
 | **js/utils/storage.js** | Wrapper `localStorage` : persistance des réglages utilisateur (thème, couleur, etc.). | - Gestion des erreurs (`try/catch`), expiration éventuelle.<br>- API asynchrone `Promise` pour uniformiser l’appel. |

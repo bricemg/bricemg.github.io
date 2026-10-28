@@ -94,6 +94,11 @@ function applyTheme(theme) {
   root.style.setProperty('--bg-gradient', `linear-gradient(${bgAngle}, ${bgStart}, ${bgEnd})`);
   root.style.setProperty('--bg', bgStart);
 
+  const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+  if (metaThemeColor) {
+    metaThemeColor.setAttribute('content', bgStart);
+  }
+
   // Cell / Blocks gradient
   const cellStart = theme.cellStart || theme.cell || '#f0f0f0';
   const cellEnd = theme.cellEnd || theme.cell || cellStart;

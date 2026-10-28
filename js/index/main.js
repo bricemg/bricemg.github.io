@@ -17,6 +17,7 @@
     initAnimation();
     setupCardDetailListeners();
   }
+  let activeAnimation = null;
 
   function initAnimation() {
     const field = document.getElementById('field');
@@ -24,18 +25,81 @@
     const canvas = field.querySelector('canvas');
     if (!canvas) return;
     try {
-      const animation = new CanvasAnimation(canvas);
-      animation.init(field);
+      if (activeAnimation && typeof activeAnimation.destroy === 'function') {
+        activeAnimation.destroy();
+      }
+      activeAnimation = new CanvasAnimation(canvas);
+      activeAnimation.init(field);
     } catch (error) {
       console.error('Erreur initialisation animation:', error);
     }
   }
 
-  function openCardDetail(card, index) {
-    const modal = document.getElementById('cardDetailModal');
-    if (!modal || !card) return;
+  let currentDetailList = [];
+  let currentDetailIndex = -1;
+
+  function getDetailCardsList() {
+    const sections = currentContent?.sections || [];
+    const list = [];
+    sections.forEach((sec, secIdx) => {
+      if (sec.visible === false) return;
+      const items = sec.items || [];
+      const visibleItems = items.filter(it => it.visible !== false);
+      visibleItems.forEach((card, sectionDisplayIdx) => {
+        if (card.full === true || card.hasDetail === true) {
+          list.push({
+            card,
+            secIdx,
+            secLetter: sec.letter || '',
+            secTitle: sec.title || '',
+            sectionDisplayIdx
+          });
+        }
+      });
+    });
+    return list;
+  }
+
+  function updateNavArrows(index) {
+    const hasPrev = index > 0;
+    const hasNext = index < currentDetailList.length - 1;
+
+    const prevBtns = [
+      document.getElementById('detailCardPrevBtn'),
+      document.getElementById('detailCardSidePrevBtn')
+    ];
+    const nextBtns = [
+      document.getElementById('detailCardNextBtn'),
+      document.getElementById('detailCardSideNextBtn')
+    ];
+
+    prevBtns.forEach(btn => {
+      if (!btn) return;
+      if (hasPrev) {
+        btn.classList.remove('is-hidden');
+      } else {
+        btn.classList.add('is-hidden');
+      }
+    });
+
+    nextBtns.forEach(btn => {
+      if (!btn) return;
+      if (hasNext) {
+        btn.classList.remove('is-hidden');
+      } else {
+        btn.classList.add('is-hidden');
+      }
+    });
+  }
+
+  function displayCardDetailByIndex(index) {
+    if (index < 0 || index >= currentDetailList.length) return;
+    currentDetailIndex = index;
+    const item = currentDetailList[index];
+    const card = item.card;
 
     const idxEl = document.getElementById('detailCardIdx');
+    const secTagEl = document.getElementById('detailCardSecTag');
     const titleEl = document.getElementById('detailCardTitle');
     const imageEl = document.getElementById('detailCardImage');
     const codeEl = document.getElementById('detailCardCode');
@@ -44,7 +108,15 @@
     const statusEl = document.getElementById('detailCardStatus');
     const longTextEl = document.getElementById('detailCardLongText');
 
-    if (idxEl) idxEl.textContent = String((index ?? 0) + 1).padStart(2, '0');
+    if (idxEl) idxEl.textContent = String(item.sectionDisplayIdx + 1).padStart(2, '0');
+    if (secTagEl) {
+      if (item.secLetter || item.secTitle) {
+        secTagEl.textContent = `${item.secLetter ? item.secLetter + ' · ' : ''}${item.secTitle || ''}`.trim();
+        secTagEl.style.display = 'inline-block';
+      } else {
+        secTagEl.style.display = 'none';
+      }
+    }
     if (titleEl) titleEl.textContent = card.code || card.title || 'BRAND';
     if (imageEl) {
       imageEl.onerror = () => {
@@ -68,6 +140,26 @@
       }
     }
 
+    updateNavArrows(index);
+  }
+
+  function navigateDetail(direction) {
+    const nextIndex = currentDetailIndex + direction;
+    if (nextIndex >= 0 && nextIndex < currentDetailList.length) {
+      displayCardDetailByIndex(nextIndex);
+    }
+  }
+
+  function openCardDetail(card, index) {
+    const modal = document.getElementById('cardDetailModal');
+    if (!modal || !card) return;
+
+    currentDetailList = getDetailCardsList();
+    const foundIdx = currentDetailList.findIndex(entry => entry.card.id === card.id || entry.card === card);
+    const targetIdx = foundIdx !== -1 ? foundIdx : 0;
+
+    displayCardDetailByIndex(targetIdx);
+
     modal.classList.add('is-open');
     modal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
@@ -79,6 +171,7 @@
     modal.classList.remove('is-open');
     modal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
+    currentDetailIndex = -1;
   }
 
   function setupCardDetailListeners() {
@@ -118,8 +211,21 @@
         }
       }
 
+      // Fermeture
       if (e.target.closest('#cardDetailCloseBtn')) {
         closeCardDetail();
+      }
+
+      // Navigation précédente
+      if (e.target.closest('#detailCardPrevBtn') || e.target.closest('#detailCardSidePrevBtn')) {
+        e.preventDefault();
+        navigateDetail(-1);
+      }
+
+      // Navigation suivante
+      if (e.target.closest('#detailCardNextBtn') || e.target.closest('#detailCardSideNextBtn')) {
+        e.preventDefault();
+        navigateDetail(1);
       }
     });
 
@@ -133,8 +239,19 @@
     }
 
     window.addEventListener('keydown', (e) => {
+      const modalEl = document.getElementById('cardDetailModal');
+      const isOpen = modalEl && modalEl.classList.contains('is-open');
+
+      if (!isOpen) return;
+
       if (e.key === 'Escape') {
         closeCardDetail();
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        navigateDetail(-1);
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        navigateDetail(1);
       }
     });
   }

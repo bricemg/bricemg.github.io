@@ -7,6 +7,7 @@
   let confirmCallback = null;
   let isPreviewMode = false;
   let wasCollapsedBeforePreview = false;
+  let activeCanvasAnimation = null;
 
   const authPanel = document.getElementById('authPanel');
   const cmsContainer = document.getElementById('cmsContainer');
@@ -95,8 +96,11 @@
     const canvas = field.querySelector('canvas');
     if (!canvas || !CanvasAnimation) return;
     try {
-      const animation = new CanvasAnimation(canvas);
-      animation.init(field);
+      if (activeCanvasAnimation && typeof activeCanvasAnimation.destroy === 'function') {
+        activeCanvasAnimation.destroy();
+      }
+      activeCanvasAnimation = new CanvasAnimation(canvas);
+      activeCanvasAnimation.init(field);
     } catch (e) {
       console.warn('Canvas animation error:', e);
     }
@@ -149,18 +153,71 @@
     if (mediaModalFileInput) mediaModalFileInput.value = '';
   }
 
-  function openAdminCardDetail(secIdx, itemIdx) {
-    const sections = currentContent?.sections || [];
-    const sec = sections[secIdx];
-    if (!sec || !sec.items || !sec.items[itemIdx]) return;
-    const card = sec.items[itemIdx];
+  let currentAdminDetailList = [];
+  let currentAdminDetailIndex = -1;
 
+  function getAdminDetailCardsList() {
+    const sections = currentContent?.sections || [];
+    const list = [];
+    sections.forEach((sec, secIdx) => {
+      const items = sec.items || [];
+      items.forEach((card, itemIdx) => {
+        list.push({
+          card,
+          secIdx,
+          itemIdx,
+          secLetter: sec.letter || '',
+          secTitle: sec.title || ''
+        });
+      });
+    });
+    return list;
+  }
+
+  function updateAdminNavArrows(index) {
+    const hasPrev = index > 0;
+    const hasNext = index < currentAdminDetailList.length - 1;
+
+    const prevBtns = [
+      document.getElementById('detailCardPrevBtn'),
+      document.getElementById('detailCardSidePrevBtn')
+    ];
+    const nextBtns = [
+      document.getElementById('detailCardNextBtn'),
+      document.getElementById('detailCardSideNextBtn')
+    ];
+
+    prevBtns.forEach(btn => {
+      if (!btn) return;
+      if (hasPrev) {
+        btn.classList.remove('is-hidden');
+      } else {
+        btn.classList.add('is-hidden');
+      }
+    });
+
+    nextBtns.forEach(btn => {
+      if (!btn) return;
+      if (hasNext) {
+        btn.classList.remove('is-hidden');
+      } else {
+        btn.classList.add('is-hidden');
+      }
+    });
+  }
+
+  function displayAdminCardDetailByIndex(index) {
+    if (index < 0 || index >= currentAdminDetailList.length) return;
+    currentAdminDetailIndex = index;
+    const item = currentAdminDetailList[index];
+    const { secIdx, itemIdx, card } = item;
     activeDetailCard = { secIdx, itemIdx, card };
 
     const modal = document.getElementById('cardDetailModal');
     if (!modal) return;
 
     const idxEl = document.getElementById('detailCardIdx');
+    const secTagEl = document.getElementById('detailCardSecTag');
     const titleEl = document.getElementById('detailCardTitle');
     const imageEl = document.getElementById('detailCardImage');
     const codeEl = document.getElementById('detailCardCode');
@@ -170,6 +227,14 @@
     const longTextEl = document.getElementById('detailCardLongText');
 
     if (idxEl) idxEl.textContent = String(itemIdx + 1).padStart(2, '0');
+    if (secTagEl) {
+      if (item.secLetter || item.secTitle) {
+        secTagEl.textContent = `${item.secLetter ? item.secLetter + ' · ' : ''}${item.secTitle || ''}`.trim();
+        secTagEl.style.display = 'inline-block';
+      } else {
+        secTagEl.style.display = 'none';
+      }
+    }
     if (titleEl) titleEl.textContent = card.code || card.title || 'BRAND';
     if (imageEl) {
       imageEl.onerror = () => {
@@ -187,9 +252,29 @@
       longTextEl.textContent = card.details || card.desc || 'Présentation détaillée du projet et démarches de conception.';
     }
 
-    modal.classList.add('is-open');
-    modal.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
+    updateAdminNavArrows(index);
+  }
+
+  function navigateAdminDetail(direction) {
+    const nextIndex = currentAdminDetailIndex + direction;
+    if (nextIndex >= 0 && nextIndex < currentAdminDetailList.length) {
+      displayAdminCardDetailByIndex(nextIndex);
+    }
+  }
+
+  function openAdminCardDetail(secIdx, itemIdx) {
+    currentAdminDetailList = getAdminDetailCardsList();
+    const foundIdx = currentAdminDetailList.findIndex(entry => entry.secIdx === secIdx && entry.itemIdx === itemIdx);
+    const targetIdx = foundIdx !== -1 ? foundIdx : 0;
+
+    displayAdminCardDetailByIndex(targetIdx);
+
+    const modal = document.getElementById('cardDetailModal');
+    if (modal) {
+      modal.classList.add('is-open');
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
   }
 
   function closeAdminCardDetail() {
@@ -200,6 +285,7 @@
     modal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
     activeDetailCard = null;
+    currentAdminDetailIndex = -1;
     renderPage();
   }
 
@@ -661,9 +747,6 @@
     [
       'cell1Title', 'cell1Body', 'cell2Title', 'cell2Body',
       'siteTitle', 'siteSubtitle', 'heroClaim', 'intro', 'about',
-      'plateFLabel', 'plateFText1', 'plateFText2',
-      'plateGLabel', 'plateGText1', 'plateGText2',
-      'plateHLabel', 'plateHText',
       'footerCol1', 'footerCol2', 'footerCol3', 'footerCol4', 'footerCol5'
     ].forEach(id => {
       const el = document.getElementById(id);
@@ -779,18 +862,35 @@
         closeAdminCardDetail();
       } else if (e.target.id === 'cardDetailModal') {
         closeAdminCardDetail();
+      } else if (e.target.closest('#detailCardPrevBtn') || e.target.closest('#detailCardSidePrevBtn')) {
+        e.preventDefault();
+        navigateAdminDetail(-1);
+      } else if (e.target.closest('#detailCardNextBtn') || e.target.closest('#detailCardSideNextBtn')) {
+        e.preventDefault();
+        navigateAdminDetail(1);
       }
     });
 
     window.addEventListener('keydown', (e) => {
-      if (e.key !== 'Escape') return;
-      if (detailLinkModal && detailLinkModal.classList.contains('is-active')) {
-        closeDetailLinkModal();
-        return;
-      }
       const detailModal = document.getElementById('cardDetailModal');
-      if (detailModal && detailModal.classList.contains('is-open')) {
+      const isModalOpen = detailModal && detailModal.classList.contains('is-open');
+
+      if (!isModalOpen) return;
+
+      if (e.key === 'Escape') {
+        if (detailLinkModal && detailLinkModal.classList.contains('is-active')) {
+          closeDetailLinkModal();
+          return;
+        }
         closeAdminCardDetail();
+      } else if (e.key === 'ArrowLeft') {
+        if (document.activeElement && document.activeElement.isContentEditable) return;
+        e.preventDefault();
+        navigateAdminDetail(-1);
+      } else if (e.key === 'ArrowRight') {
+        if (document.activeElement && document.activeElement.isContentEditable) return;
+        e.preventDefault();
+        navigateAdminDetail(1);
       }
     });
 
@@ -979,33 +1079,6 @@
         const colNum = footerKey.replace('col', '');
         const inputEl = document.getElementById('footerCol' + colNum);
         if (inputEl) inputEl.value = val;
-      } else if (!isNaN(plateIdx)) {
-        currentContent.plates = currentContent.plates || [];
-        const plate = currentContent.plates[plateIdx];
-        if (plate) {
-          if (field === 'letter') plate.letter = val;
-          else if (field === 'label') {
-            plate.label = val;
-            const inputId = plateIdx === 0 ? 'plateFLabel' : (plateIdx === 1 ? 'plateGLabel' : 'plateHLabel');
-            const labEl = document.getElementById(inputId);
-            if (labEl) labEl.value = val;
-          } else if (field === 'text') {
-            plate.text = val;
-            const txtEl = document.getElementById('plateHText');
-            if (txtEl) txtEl.value = val;
-          } else if (field === 'emailPrefix') plate.emailPrefix = val;
-          else if (field === 'email') plate.email = val;
-          else if (field === 'item-title') {
-            if (plate.items && plate.items[itemIdx]) plate.items[itemIdx].title = val;
-          } else if (field === 'item-desc') {
-            if (plate.items && plate.items[itemIdx]) {
-              plate.items[itemIdx].desc = val;
-              const inputId = plateIdx === 0 ? (itemIdx === 0 ? 'plateFText1' : 'plateFText2') : (itemIdx === 0 ? 'plateGText1' : 'plateGText2');
-              const descEl = document.getElementById(inputId);
-              if (descEl) descEl.value = val;
-            }
-          }
-        }
       } else if (action === 'edit-sec-letter') {
         if (currentContent.sections[secIdx]) {
           currentContent.sections[secIdx].letter = val;

@@ -230,6 +230,7 @@ class CanvasAnimation {
   }
 
   init(element) {
+    this.isVisible = true;
     this.measure();
     this.seed();
     this.draw();
@@ -247,7 +248,7 @@ class CanvasAnimation {
               this.measure();
               if (this.bodies.length === 0) this.seed();
               this.draw();
-              this.start();
+              if (this.isVisible) this.start();
             }
           }
         }
@@ -255,9 +256,26 @@ class CanvasAnimation {
       this.resizeObserver.observe(element);
     }
 
+    // 2. IntersectionObserver : pause les calculs physiques quand le canvas n'est pas dans le viewport
+    if ('IntersectionObserver' in window) {
+      this.intersectionObserver = new IntersectionObserver((entries) => {
+        for (let entry of entries) {
+          if (entry.isIntersecting) {
+            this.isVisible = true;
+            this.last = 0;
+            this.start();
+          } else {
+            this.isVisible = false;
+            this.stop();
+          }
+        }
+      }, { threshold: 0.05 });
+      this.intersectionObserver.observe(element);
+    }
+
     // Interactive pointer
     element.addEventListener('pointerenter', () => {
-      this.start();
+      if (this.isVisible) this.start();
     });
 
     element.addEventListener('pointermove', (e) => {
@@ -265,7 +283,7 @@ class CanvasAnimation {
       this.pointer.x = e.clientX - rect.left;
       this.pointer.y = e.clientY - rect.top;
       this.pointer.on = true;
-      if (!this.raf) this.start();
+      if (!this.raf && this.isVisible) this.start();
     });
 
     element.addEventListener('pointerleave', () => {
@@ -276,12 +294,12 @@ class CanvasAnimation {
       this.measure();
       this.seed();
       this.draw();
-      this.start();
+      if (this.isVisible) this.start();
     });
 
-    // 3. Force redraw & wake loop on focus and visibility change
+    // 3. Redraw & wake loop on focus and visibility change
     document.addEventListener('visibilitychange', () => {
-      if (!document.hidden) {
+      if (!document.hidden && this.isVisible) {
         this.last = 0;
         this.measure();
         this.draw();
@@ -292,11 +310,25 @@ class CanvasAnimation {
     });
 
     window.addEventListener('focus', () => {
-      this.last = 0;
-      this.measure();
-      this.draw();
-      this.start();
+      if (this.isVisible) {
+        this.last = 0;
+        this.measure();
+        this.draw();
+        this.start();
+      }
     });
+  }
+
+  destroy() {
+    this.stop();
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+      this.resizeObserver = null;
+    }
+    if (this.intersectionObserver) {
+      this.intersectionObserver.disconnect();
+      this.intersectionObserver = null;
+    }
   }
 }
 

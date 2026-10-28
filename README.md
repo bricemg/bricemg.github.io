@@ -13,7 +13,7 @@ A minimal, high-aesthetic portfolio website with an integrated live WYSIWYG CMS 
 
 ### Features
 - **Public Portfolio**: Fast, lightweight, responsive showcase with generative background canvas effects.
-- **Live WYSIWYG CMS Studio** (`admin.html`): Edit text directly in context or via the collapsible sidebar with live preview.
+- **Live WYSIWYG CMS Studio** (`noAdmin.html`): Edit text directly in context or via the collapsible sidebar with live preview.
 - **Advanced Theme Customizer**:
   - Linear gradients with custom angles & color pickers (Background, Cards/Cells, Contours/Borders).
   - Typography selector (Doto, IBM Plex Mono, Inter, JetBrains Mono, Space Mono, Syne).
@@ -31,7 +31,7 @@ A minimal, high-aesthetic portfolio website with an integrated live WYSIWYG CMS 
 ### Project Structure
 ```text
 ├── index.html            # Public portfolio homepage
-├── admin.html            # Live WYSIWYG CMS editor
+├── noAdmin.html          # Live WYSIWYG CMS editor
 ├── content.json          # Default site data & theme configuration
 ├── styles.css            # Core design system and visitor layout styling
 ├── css/
@@ -58,10 +58,10 @@ npx serve .
 
 Then navigate to:
 - Public site: [http://localhost:8000/](http://localhost:8000/)
-- CMS Studio: [http://localhost:8000/admin.html](http://localhost:8000/admin.html)
+- CMS Studio: [http://localhost:8000/noAdmin.html](http://localhost:8000/noAdmin.html)
 
 ### How Content is Published
-1. Access the CMS at `admin.html` using the access key (default: `bricemg`).
+1. Access the CMS at `noAdmin.html` using the access key (default: `bricemg`).
 2. Tweak your theme, copy, and project cards with live visual feedback.
 3. Click **"Enregistrer (Local)"** to preserve edits in your browser.
 4. Click **"Exporter content.json"** to download the updated data file.
@@ -76,7 +76,7 @@ Then navigate to:
 ### Deployment
 Ready to deploy out of the box on **GitHub Pages**, Netlify, Vercel, or any static host:
 - Public site: `https://bricemg.github.io/_/`
-- Admin: `https://bricemg.github.io/_/admin.html`
+- Admin: `https://bricemg.github.io/_/noAdmin.html`
 
 ---
 
@@ -87,7 +87,7 @@ Ready to deploy out of the box on **GitHub Pages**, Netlify, Vercel, or any stat
 
 ### Fonctionnalités
 - **Site public vitrine** : Page d'accueil fluide, responsive, dotée d'une animation d'arrière-plan sur canvas interactif.
-- **Studio CMS WYSIWYG en direct** (`admin.html`) : Modification directe des éléments à l'écran ou via le volet latéral repliable avec aperçu temps réel.
+- **Studio CMS WYSIWYG en direct** (`noAdmin.html`) : Modification directe des éléments à l'écran ou via le volet latéral repliable avec aperçu temps réel.
 - **Personnalisation visuelle avancée du thème** :
   - Dégradés linéaires configurables (angles et sélecteurs de couleurs pour l'arrière-plan, les cellules/cartes et les bordures).
   - Choix de typographies contemporaines (Doto, IBM Plex Mono, Inter, JetBrains Mono, Space Mono, Syne).
@@ -105,7 +105,7 @@ Ready to deploy out of the box on **GitHub Pages**, Netlify, Vercel, or any stat
 ### Structure du projet
 ```text
 ├── index.html            # Site vitrine public
-├── admin.html            # Studio d'édition CMS WYSIWYG
+├── noAdmin.html          # Studio d'édition CMS WYSIWYG
 ├── content.json          # Données par défaut du site et paramètres du thème
 ├── styles.css            # Système de design principal et styles du site
 ├── css/
@@ -132,10 +132,10 @@ npx serve .
 
 Puis rendez-vous sur :
 - Site public : [http://localhost:8000/](http://localhost:8000/)
-- Studio CMS : [http://localhost:8000/admin.html](http://localhost:8000/admin.html)
+- Studio CMS : [http://localhost:8000/noAdmin.html](http://localhost:8000/noAdmin.html)
 
 ### Workflow de mise à jour du contenu
-1. Accédez à `admin.html` et saisissez la clé d'accès (par défaut : `bricemg`).
+1. Accédez à `noAdmin.html` et saisissez la clé d'accès (par défaut : `bricemg`).
 2. Personnalisez votre thème, vos textes et vos projets avec rendu visuel direct.
 3. Cliquez sur **« Enregistrer (Local) »** pour garder vos modifications dans votre navigateur.
 4. Cliquez sur **« Exporter content.json »** pour télécharger le fichier à jour.
@@ -150,7 +150,7 @@ Puis rendez-vous sur :
 ### Déploiement
 Prêt pour un déploiement direct sur **GitHub Pages**, Netlify, Vercel ou n'importe quel hébergeur statique :
 - Site public : `https://bricemg.github.io/_/`
-- Panneau d'administration : `https://bricemg.github.io/_/admin.html`
+- Panneau d'administration : `https://bricemg.github.io/_/noAdmin.html`
 
 ---
 

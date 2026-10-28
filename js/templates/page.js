@@ -296,7 +296,7 @@
       <div class="row row--three">
         <div class="cell">
           <div class="cell-top">
-            <span class="dot title ${isEditable ? 'cms-editable' : ''}" ${isEditable ? 'contenteditable="true" spellcheck="false" data-field="site-cell1-title"' : ''}>${sanitize(cell1Title)}</span>
+            <h1 class="dot title ${isEditable ? 'cms-editable' : ''}" style="margin: 0; font-weight: inherit;" ${isEditable ? 'contenteditable="true" spellcheck="false" data-field="site-cell1-title"' : ''}>${sanitize(cell1Title)}</h1>
           </div>
           <div class="cell-body">
             <div class="cell-meta-list ${isEditable ? 'cms-editable' : ''}" ${isEditable ? 'contenteditable="true" spellcheck="false" data-field="site-cell1-body"' : ''}>
@@ -306,7 +306,7 @@
         </div>
         <div class="cell">
           <div class="cell-top">
-            <span class="dot title ${isEditable ? 'cms-editable' : ''}" ${isEditable ? 'contenteditable="true" spellcheck="false" data-field="site-cell2-title"' : ''}>${sanitize(cell2Title)}</span>
+            <h2 class="dot title ${isEditable ? 'cms-editable' : ''}" style="margin: 0; font-weight: inherit;" ${isEditable ? 'contenteditable="true" spellcheck="false" data-field="site-cell2-title"' : ''}>${sanitize(cell2Title)}</h2>
           </div>
           <div class="cell-body">
             <div class="cell-meta-list ${isEditable ? 'cms-editable' : ''}" ${isEditable ? 'contenteditable="true" spellcheck="false" data-field="site-cell2-body"' : ''}>
@@ -335,25 +335,51 @@
   `;
   }
 
-  // Pour remettre le lien vers le CMS
-  // ${!isEditable ? '<a href="admin.html" class="cms-link">CMS</a>' : ''} sous ${buildCardDetailModalHTML(isEditable)} ^
+  // Pour remettre le lien discret vers le CMS en bas à droite :
+  // ${!isEditable ? '<a href="noAdmin.html" class="cms-link">CMS</a>' : ''} sous ${buildCardDetailModalHTML(isEditable)} ^
 
   function buildCardDetailModalHTML(isEditable) {
     return `
     <div id="cardDetailModal" class="card-detail-backdrop" role="dialog" aria-modal="true" aria-hidden="true">
       <div class="card-detail-dialog">
+        <!-- Flèches latérales grand écran -->
+        <button type="button" class="card-detail-side-arrow card-detail-side-arrow--prev" id="detailCardSidePrevBtn" aria-label="Contenu précédent" title="Précédent (Flèche gauche)">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+        <button type="button" class="card-detail-side-arrow card-detail-side-arrow--next" id="detailCardSideNextBtn" aria-label="Contenu suivant" title="Suivant (Flèche droite)">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+
         <div class="cell card-detail-card">
-          <button type="button" class="card-detail-close-btn" id="cardDetailCloseBtn" aria-label="Close detail view">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
-          </button>
+          <!-- Actions d'en-tête (flèches universelles + fermeture) -->
+          <div class="card-detail-header-actions">
+            <!-- <button type="button" class="card-detail-nav-btn" id="detailCardPrevBtn" aria-label="Contenu précédent" title="Précédent (Flèche gauche)">
+            //   <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            //     <polyline points="15 18 9 12 15 6"></polyline>
+            //   </svg>
+            // </button>
+            // <button type="button" class="card-detail-nav-btn" id="detailCardNextBtn" aria-label="Contenu suivant" title="Suivant (Flèche droite)">
+            //   <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            //     <polyline points="9 18 15 12 9 6"></polyline>
+            //   </svg>
+            --> </button>
+            <button type="button" class="card-detail-close-btn" id="cardDetailCloseBtn" aria-label="Fermer la vue détaillée" title="Fermer (Échap)">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
 
           <div class="cell-top">
             <div class="card-detail-index-wrap">
               <span class="dot idx" id="detailCardIdx">01</span>
               <span class="cue"></span>
+              <span class="card-detail-sec-tag" id="detailCardSecTag" style="display: none;"></span>
             </div>
           </div>
 
