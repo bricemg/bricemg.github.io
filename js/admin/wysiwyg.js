@@ -862,6 +862,35 @@
     }
 
     document.addEventListener('click', (e) => {
+      const link = e.target.closest('[data-href]');
+      if (link && !document.activeElement?.isContentEditable) {
+        e.preventDefault();
+        const targetUrl = (link.getAttribute('data-href') || '').trim();
+        if (targetUrl) {
+          if (/^(javascript|vbscript|data):/i.test(targetUrl)) {
+            console.warn('Protocole non autorisé bloqué :', targetUrl);
+            return;
+          }
+          const isDownload = link.hasAttribute('download') || /\.(zip|rar|7z|tar|gz|pdf)$/i.test(targetUrl);
+          if (isDownload) {
+            const a = document.createElement('a');
+            a.href = targetUrl;
+            const dlVal = link.getAttribute('download');
+            a.download = (dlVal && dlVal !== 'true') ? dlVal : (targetUrl.split('/').pop() || 'download');
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+          } else if (link.hasAttribute('data-external') || /^https?:\/\//i.test(targetUrl)) {
+            window.open(targetUrl, '_blank', 'noopener,noreferrer');
+          } else if (/^mailto:/i.test(targetUrl)) {
+            window.location.href = targetUrl;
+          } else {
+            window.location.href = targetUrl;
+          }
+          return;
+        }
+      }
+
       if (e.target.closest('#cardDetailCloseBtn')) {
         closeAdminCardDetail();
       } else if (e.target.id === 'cardDetailModal') {

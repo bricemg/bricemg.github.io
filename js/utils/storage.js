@@ -155,12 +155,15 @@ function setAuthenticated(val) {
   }
 }
 
-// Sanitize HTML string
+// Sanitize HTML string (escapes tags and quotes for safe attribute injection)
 function sanitize(str) {
   if (str === null || str === undefined) return '';
-  const div = document.createElement('div');
-  div.textContent = String(str);
-  return div.innerHTML;
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
 
 function linkify(str) {
@@ -169,7 +172,7 @@ function linkify(str) {
     const suffix = trailing ? trailing[0] : '';
     const url = suffix ? match.slice(0, -suffix.length) : match;
     if (!/^https?:\/\//i.test(url)) return match;
-    return `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>${suffix}`;
+    return `<span class="stealth-link" data-href="${url}" data-external="true" role="link" tabindex="0">${url}</span>${suffix}`;
   });
 }
 
@@ -181,11 +184,16 @@ function formatDetailHtml(str) {
     (fullTag, attrs, label) => {
       const hrefMatch = attrs.match(/\bhref\s*=\s*(["'])(.*?)\1/i);
       if (!hrefMatch) return fullTag;
-      const href = hrefMatch[2].replace(/\\/g, '/');
+      const href = hrefMatch[2].replace(/\\/g, '/').trim();
+      // Block dangerous protocols like javascript: or data: in links
+      if (/^(javascript|vbscript|data):/i.test(href)) {
+        return sanitize(label);
+      }
       const hasDownload = /\bdownload\b/i.test(attrs);
       const isExternal = /^https?:\/\//i.test(href);
+      const isMail = /^mailto:/i.test(href);
       const token = `%%BRICE_A_${links.length}%%`;
-      links.push({ href, label, isExternal, hasDownload });
+      links.push({ href, label, isExternal, isMail, hasDownload });
       return token;
     }
   );
@@ -197,10 +205,11 @@ function formatDetailHtml(str) {
       extraAttrs += ' download';
     }
     if (link.isExternal) {
-      extraAttrs += ' target="_blank" rel="noopener noreferrer"';
+      extraAttrs += ' data-external="true"';
     }
+    // Stealth link: no href attribute, no URL tooltip in browser window
     html = html.split(`%%BRICE_A_${i}%%`).join(
-      `<a href="${sanitize(link.href)}"${extraAttrs}>${sanitize(link.label)}</a>`
+      `<span class="stealth-link" data-href="${sanitize(link.href)}"${extraAttrs} role="link" tabindex="0">${sanitize(link.label)}</span>`
     );
   });
   return html;

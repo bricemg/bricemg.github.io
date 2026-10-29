@@ -2,9 +2,12 @@
   // Template builders for HTML generation with WYSIWYG CMS support
   const sanitize = (window.storageUtils && window.storageUtils.sanitize) || window.sanitize || function (str) {
     if (str === null || str === undefined) return '';
-    const div = document.createElement('div');
-    div.textContent = String(str);
-    return div.innerHTML;
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
   };
 
   // Auto-linkify: preserves existing <a href> tags, turns plain emails into mailto: and plain URLs into clickable links
@@ -18,7 +21,11 @@
       (fullTag, attrs, label) => {
         const hrefMatch = attrs.match(/\bhref\s*=\s*(["'])(.*?)\1/i);
         if (!hrefMatch) return fullTag;
-        const href = hrefMatch[2].replace(/\\/g, '/');
+        const href = hrefMatch[2].replace(/\\/g, '/').trim();
+        // Block dangerous protocols like javascript: or data: in links
+        if (/^(javascript|vbscript|data):/i.test(href)) {
+          return sanitize(label);
+        }
         const hasDownload = /\bdownload\b/i.test(attrs);
         const isExternal = /^https?:\/\//i.test(href);
         const isMail = /^mailto:/i.test(href);
@@ -29,23 +36,23 @@
     );
     // 2. Sanitize the rest (escapes any remaining HTML)
     let html = sanitize(withTokens);
-    // 3. Convert plain emails to mailto links
+    // 3. Convert plain emails to stealth mailto links
     html = html.replace(/([a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,})/g,
-      '<a href="mailto:$1">$1</a>');
-    // 4. Convert plain URLs to clickable links
+      '<span class="stealth-link" data-href="mailto:$1" role="link" tabindex="0">$1</span>');
+    // 4. Convert plain URLs to clickable stealth links
     html = html.replace(/(https?:\/\/[^\s<]+)/gi, (match) => {
       const trailing = match.match(/[.,;:!?)]+$/);
       const suffix = trailing ? trailing[0] : '';
       const url = suffix ? match.slice(0, -suffix.length) : match;
-      return `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>${suffix}`;
+      return `<span class="stealth-link" data-href="${url}" data-external="true" role="link" tabindex="0">${url}</span>${suffix}`;
     });
-    // 5. Restore extracted <a> tags
+    // 5. Restore extracted tags as stealth links (no URL preview in browser status bar)
     links.forEach((link, i) => {
       let extraAttrs = '';
       if (link.hasDownload) extraAttrs += ' download';
-      if (link.isExternal) extraAttrs += ' target="_blank" rel="noopener noreferrer"';
+      if (link.isExternal) extraAttrs += ' data-external="true"';
       html = html.split(`%%LINK_${i}%%`).join(
-        `<a href="${sanitize(link.href)}"${extraAttrs}>${sanitize(link.label)}</a>`
+        `<span class="stealth-link" data-href="${sanitize(link.href)}"${extraAttrs} role="link" tabindex="0">${sanitize(link.label)}</span>`
       );
     });
     return html;
@@ -93,7 +100,7 @@
 
     if (isFull) {
       return `
-      <a class="cell tool tool--has-detail ${!hasMedia ? 'tool--no-media' : ''}" data-tool="${sanitize(card.id)}" data-card-id="${sanitize(card.id)}" data-sec-idx="${secIdx ?? ''}" data-item-idx="${itemIdx}" data-display-idx="${displayIndex}" data-action="open-card-detail" href="javascript:void(0);" target="_self">
+      <div class="cell tool tool--has-detail ${!hasMedia ? 'tool--no-media' : ''}" role="button" tabindex="0" data-tool="${sanitize(card.id)}" data-card-id="${sanitize(card.id)}" data-sec-idx="${secIdx ?? ''}" data-item-idx="${itemIdx}" data-display-idx="${displayIndex}" data-action="open-card-detail">
         <div class="cell-top">
           <span class="dot idx">${String(displayIndex + 1).padStart(2, '0')}</span>
           <span class="cue"></span>
@@ -110,7 +117,7 @@
           </dl>
           <div class="go">VIEW DETAILS<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3.5 8.5 8.5 3.5M4.5 3.5H8.5V7.5" fill="none" stroke="currentColor" stroke-width="1.4"/></svg></div>
         </div>
-      </a>
+      </div>
     `;
     }
 

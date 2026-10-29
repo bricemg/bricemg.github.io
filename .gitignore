@@ -1,6 +1,7 @@
 # Archives et sauvegardes de version
 archives/
 *.zip
+!stuff/*.zip
 
 # Fichiers système et éditeurs
 .DS_Store

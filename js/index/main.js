@@ -238,9 +238,51 @@
       });
     }
 
+    // Clics sur les liens furtifs (téléchargements et liens sans aperçu d'URL dans la barre d'état du navigateur)
+    document.addEventListener('click', (e) => {
+      const link = e.target.closest('[data-href]');
+      if (!link) return;
+      e.preventDefault();
+      const targetUrl = (link.getAttribute('data-href') || '').trim();
+      if (!targetUrl) return;
+
+      // Protection contre les protocoles dangereux (javascript:, vbscript:, data:)
+      if (/^(javascript|vbscript|data):/i.test(targetUrl)) {
+        console.warn('Protocole non autorisé bloqué :', targetUrl);
+        return;
+      }
+
+      const isDownload = link.hasAttribute('download') || /\.(zip|rar|7z|tar|gz|pdf)$/i.test(targetUrl);
+      if (isDownload) {
+        const a = document.createElement('a');
+        a.href = targetUrl;
+        const dlVal = link.getAttribute('download');
+        a.download = (dlVal && dlVal !== 'true') ? dlVal : (targetUrl.split('/').pop() || 'download');
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      } else if (link.hasAttribute('data-external') || /^https?:\/\//i.test(targetUrl)) {
+        window.open(targetUrl, '_blank', 'noopener,noreferrer');
+      } else if (/^mailto:/i.test(targetUrl)) {
+        window.location.href = targetUrl;
+      } else {
+        window.location.href = targetUrl;
+      }
+    });
+
     window.addEventListener('keydown', (e) => {
       const modalEl = document.getElementById('cardDetailModal');
       const isOpen = modalEl && modalEl.classList.contains('is-open');
+
+      // Déclenchement au clavier (Entrée / Espace) sur les cartes et liens furtifs
+      if (e.key === 'Enter' || e.key === ' ') {
+        const activeEl = document.activeElement;
+        if (activeEl && (activeEl.matches('[data-action="open-card-detail"]') || activeEl.matches('[data-href]'))) {
+          e.preventDefault();
+          activeEl.click();
+          return;
+        }
+      }
 
       if (!isOpen) return;
 

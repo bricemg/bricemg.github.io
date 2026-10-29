@@ -1012,7 +1012,14 @@ button.secondary {
   min-height: 110px; */
 }
 
-.card-detail-text a {
+.stealth-link {
+  cursor: pointer;
+  user-select: text;
+}
+
+.card-detail-text a,
+.card-detail-text .stealth-link,
+.card-detail-text [data-href] {
   color: var(--red);
   text-decoration: underline;
   text-underline-offset: 3px;
@@ -1021,6 +1028,22 @@ button.secondary {
   pointer-events: auto;
 }
 
-.card-detail-text a:hover {
+.card-detail-text a:hover,
+.card-detail-text .stealth-link:hover,
+.card-detail-text [data-href]:hover {
+  color: var(--ink);
+}
+
+.foot a,
+.foot .stealth-link,
+.foot [data-href] {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.foot a:hover,
+.foot .stealth-link:hover,
+.foot [data-href]:hover {
   color: var(--ink);
 }
