@@ -177,18 +177,30 @@ function formatDetailHtml(str) {
   const source = str == null ? '' : String(str);
   const links = [];
   const withTokens = source.replace(
-    /<a\s+href\s*=\s*(["'])(https?:\/\/[^"'<>\s]+)\1\s*>([\s\S]*?)<\/a>/gi,
-    (_, _quote, href, label) => {
+    /<a\b([^>]*)>([\s\S]*?)<\/a>/gi,
+    (fullTag, attrs, label) => {
+      const hrefMatch = attrs.match(/\bhref\s*=\s*(["'])(.*?)\1/i);
+      if (!hrefMatch) return fullTag;
+      const href = hrefMatch[2].replace(/\\/g, '/');
+      const hasDownload = /\bdownload\b/i.test(attrs);
+      const isExternal = /^https?:\/\//i.test(href);
       const token = `%%BRICE_A_${links.length}%%`;
-      links.push({ href, label });
+      links.push({ href, label, isExternal, hasDownload });
       return token;
     }
   );
 
   let html = linkify(withTokens);
   links.forEach((link, i) => {
+    let extraAttrs = '';
+    if (link.hasDownload) {
+      extraAttrs += ' download';
+    }
+    if (link.isExternal) {
+      extraAttrs += ' target="_blank" rel="noopener noreferrer"';
+    }
     html = html.split(`%%BRICE_A_${i}%%`).join(
-      `<a href="${sanitize(link.href)}" target="_blank" rel="noopener noreferrer">${sanitize(link.label)}</a>`
+      `<a href="${sanitize(link.href)}"${extraAttrs}>${sanitize(link.label)}</a>`
     );
   });
   return html;

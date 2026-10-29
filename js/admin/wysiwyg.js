@@ -317,10 +317,12 @@
   }
 
   function normalizeDetailHref(raw) {
-    let url = String(raw || '').trim();
+    let url = String(raw || '').trim().replace(/\\/g, '/');
     if (!url) return '';
-    if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
-    if (!/^https?:\/\/[^\s"'<>]+$/i.test(url)) return '';
+    if (!/^https?:\/\//i.test(url) && !/^mailto:/i.test(url) && !url.includes('/') && !url.includes('.')) {
+      url = 'https://' + url;
+    }
+    if (!/^[a-zA-Z0-9_\-\.\/:\?#=&%]+$/i.test(url)) return '';
     return url;
   }
 
@@ -338,7 +340,9 @@
     }
 
     const label = String(detailLinkText?.value || '').trim() || href;
-    const snippet = `<a href="${href}">${label.replace(/<\/a>/gi, '')}</a>`;
+    const isFile = /\.(zip|rar|7z|tar|gz|pdf)$/i.test(href);
+    const downloadAttr = isFile ? ' download' : '';
+    const snippet = `<a href="${href}"${downloadAttr}>${label.replace(/<\/a>/gi, '')}</a>`;
 
     longTextEl.focus();
     const sel = window.getSelection();

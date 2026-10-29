@@ -14,10 +14,16 @@
     // 1. Extract existing <a> tags and replace with tokens
     const links = [];
     const withTokens = source.replace(
-      /<a\s+href\s*=\s*(["'])((?:https?:\/\/|mailto:)[^"'<>\s]+)\1[^>]*>([\s\S]*?)<\/a>/gi,
-      (_, _quote, href, label) => {
+      /<a\b([^>]*)>([\s\S]*?)<\/a>/gi,
+      (fullTag, attrs, label) => {
+        const hrefMatch = attrs.match(/\bhref\s*=\s*(["'])(.*?)\1/i);
+        if (!hrefMatch) return fullTag;
+        const href = hrefMatch[2].replace(/\\/g, '/');
+        const hasDownload = /\bdownload\b/i.test(attrs);
+        const isExternal = /^https?:\/\//i.test(href);
+        const isMail = /^mailto:/i.test(href);
         const token = `%%LINK_${links.length}%%`;
-        links.push({ href, label });
+        links.push({ href, label, isExternal, isMail, hasDownload });
         return token;
       }
     );
@@ -35,10 +41,11 @@
     });
     // 5. Restore extracted <a> tags
     links.forEach((link, i) => {
-      const isMail = link.href.startsWith('mailto:');
-      const attrs = isMail ? '' : ' target="_blank" rel="noopener noreferrer"';
+      let extraAttrs = '';
+      if (link.hasDownload) extraAttrs += ' download';
+      if (link.isExternal) extraAttrs += ' target="_blank" rel="noopener noreferrer"';
       html = html.split(`%%LINK_${i}%%`).join(
-        `<a href="${sanitize(link.href)}"${attrs}>${sanitize(link.label)}</a>`
+        `<a href="${sanitize(link.href)}"${extraAttrs}>${sanitize(link.label)}</a>`
       );
     });
     return html;

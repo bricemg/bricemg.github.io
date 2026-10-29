@@ -2,32 +2,32 @@
   "site": {
     "title": "BRICEMG / STUDIO",
     "subtitle": "DESIGN / CODE / VISION",
-    "heroClaim": "FROM IDEA TO PROJECTS  VISUAL / CODE / TOOLS & STUFF",
+    "heroClaim": "FROM IDEA TO PROJECTS  \nVISUAL / CODE / TOOLS & STUFF",
     "cell1Title": "BRICEMG",
     "cell1Body": "A SPACE WITH IDEAS AND PROJECTS\nA COLLECTION OF GRAPHIC DESIGN, UX/UI, AND CODING PROJECTS, RESOURCES, AND TOOLS\n\n\nSOME AVAILABLE FOR PERSONAL USE ( UNDER GPL3 )\nFEEL FREE TO TEST THEM AND GIMME FEEDBACKS !",
-    "cell2Title": "°0O",
+    "cell2Title": "_.0O°`",
     "cell2Body": "",
     "intro": "",
     "about": "",
     "email": "bonjour@bricemg.dev"
   },
   "theme": {
-    "bgStart": "#1b1924",
-    "bgEnd": "#0b0a0f",
-    "bgAngle": "30deg",
-    "bg": "#1b1924",
-    "cellStart": "#1c1929",
-    "cellEnd": "#14111d",
-    "cellAngle": "210deg",
-    "cell": "#1c1929",
-    "borderStart": "#464153E0",
-    "borderEnd": "#2b273580",
-    "borderAngle": "120deg",
-    "border": "#464153E0",
+    "bgStart": "#080a14",
+    "bgEnd": "#0f1224",
+    "bgAngle": "165deg",
+    "bg": "#080a14",
+    "cellStart": "#080a14",
+    "cellEnd": "#161b37",
+    "cellAngle": "195deg",
+    "cell": "#080a14",
+    "borderStart": "#161b37",
+    "borderEnd": "#080a14",
+    "borderAngle": "180deg",
+    "border": "#161b37",
     "text": "#dad8e4",
-    "textSoft": "#be7119",
+    "textSoft": "#dfb211",
     "textFaint": "#d8d6e1",
-    "accent": "#df7c0c",
+    "accent": "#dfb211",
     "fontDot": "'Doto', ui-monospace, monospace",
     "fontMono": "'Inter', sans-serif",
     "fontSize": "12px",
@@ -132,7 +132,7 @@
           "desc": "WEBAPP FOR MOBILITY ECO FRIENDLY",
           "type": "WEBAPP",
           "status": "ACTIF",
-          "image": "media/windRider2.png",
+          "image": "media/windRider4.png",
           "visible": true,
           "version": "V 0.9",
           "full": true,
@@ -156,7 +156,8 @@
           "visible": true,
           "version": "V 0.9",
           "full": true,
-          "hasDetail": true
+          "hasDetail": true,
+          "image": "media/_nuage2.png"
         },
         {
           "id": "motion",
@@ -208,7 +209,8 @@
           "visible": true,
           "version": "WIP",
           "full": true,
-          "hasDetail": true
+          "hasDetail": true,
+          "details": "Follow that: <a href=\"stuff/time_animation.zip\" download>Link</a>"
         },
         {
           "id": "card_1792935804727",
@@ -413,7 +415,7 @@
       "desc": "WEBAPP FOR MOBILITY ECO FRIENDLY",
       "type": "WEBAPP",
       "status": "ACTIF",
-      "image": "media/windRider2.png",
+      "image": "media/windRider4.png",
       "visible": true,
       "version": "V 0.9",
       "full": true,
@@ -431,7 +433,8 @@
       "visible": true,
       "version": "V 0.9",
       "full": true,
-      "hasDetail": true
+      "hasDetail": true,
+      "image": "media/_nuage2.png"
     },
     {
       "id": "motion",
@@ -483,7 +486,8 @@
       "visible": true,
       "version": "WIP",
       "full": true,
-      "hasDetail": true
+      "hasDetail": true,
+      "details": "Follow that: <a href=\"stuff/time_animation.zip\" download>Link</a>"
     },
     {
       "id": "card_1792935804727",

@@ -366,9 +366,16 @@ img {
   transition: transform 0.4s ease;
 }
 
+@supports (mix-blend-mode: normal) {
+  .tool:hover .card-media {
+    mix-blend-mode: normal;
+  }
+}
+
 .tool:hover .card-media img,
 .tool:focus-visible .card-media img {
   transform: scale(1.05);
+  mix-blend-mode: normal;
 }
 
 .tool:hover .card-media,
@@ -809,21 +816,7 @@ button.secondary {
   z-index: 10;
 }
 
-.card-detail-nav-btn {
-  width: 32px;
-  height: 32px;
-  padding: 0;
-  border-radius: 50%;
-  border: 1px solid var(--hair);
-  background: var(--cell);
-  color: var(--ink);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
+.card-detail-nav-btn,
 .card-detail-close-btn {
   width: 32px;
   height: 32px;
