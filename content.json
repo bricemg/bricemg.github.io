@@ -43,6 +43,19 @@
       "visible": true,
       "items": [
         {
+          "id": "card_1793280045569",
+          "title": "NOUVELLE CARTE",
+          "code": "CODE",
+          "desc": "Description du projet ou du service.",
+          "type": "IDENTITÉ",
+          "status": "ACTIF",
+          "image": "media/_placeholder.png",
+          "visible": true,
+          "full": true,
+          "hasDetail": true,
+          "details": "<a href=\"stuff/time_animation.zip\" download>Link</a>"
+        },
+        {
           "id": "branding",
           "title": "IDENTITÉ VISUELLE",
           "code": "PORTFOLIO 2026",
@@ -196,7 +209,7 @@
           "version": "FINAL",
           "full": true,
           "hasDetail": true,
-          "details": "BLENDER 3D TOOL Ok !"
+          "details": "Follow that: <a href=\"stuff\\time_animation.zip\">Link</a>"
         },
         {
           "id": "card_1792848848664",
@@ -209,8 +222,7 @@
           "visible": true,
           "version": "WIP",
           "full": true,
-          "hasDetail": true,
-          "details": "Follow that: <a href=\"stuff/time_animation.zip\" download>Link</a>"
+          "hasDetail": true
         },
         {
           "id": "card_1792935804727",
@@ -325,6 +337,19 @@
     "col5": "© 2026"
   },
   "cards": [
+    {
+      "id": "card_1793280045569",
+      "title": "NOUVELLE CARTE",
+      "code": "CODE",
+      "desc": "Description du projet ou du service.",
+      "type": "IDENTITÉ",
+      "status": "ACTIF",
+      "image": "media/_placeholder.png",
+      "visible": true,
+      "full": true,
+      "hasDetail": true,
+      "details": "<a href=\"stuff/time_animation.zip\" download>Link</a>"
+    },
     {
       "id": "branding",
       "title": "IDENTITÉ VISUELLE",
@@ -473,7 +498,7 @@
       "version": "FINAL",
       "full": true,
       "hasDetail": true,
-      "details": "BLENDER 3D TOOL Ok !"
+      "details": "Follow that: <a href=\"stuff\\time_animation.zip\">Link</a>"
     },
     {
       "id": "card_1792848848664",
@@ -486,8 +511,7 @@
       "visible": true,
       "version": "WIP",
       "full": true,
-      "hasDetail": true,
-      "details": "Follow that: <a href=\"stuff/time_animation.zip\" download>Link</a>"
+      "hasDetail": true
     },
     {
       "id": "card_1792935804727",
