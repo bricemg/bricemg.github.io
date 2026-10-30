@@ -72,6 +72,19 @@
           "showMedia": true
         },
         {
+          "id": "card_1793281693766",
+          "title": "NOUVELLE CARTE",
+          "code": "CODE",
+          "desc": "Description du projet ou du service.",
+          "type": "IDENTITÉ",
+          "status": "ACTIF",
+          "image": "media/_placeholder.png",
+          "visible": true,
+          "full": true,
+          "hasDetail": true,
+          "details": "<a href=\"stuff/view_to_cam.zip\" download>Link</a>"
+        },
+        {
           "id": "card_1792768713294",
           "title": "NOUVELLE CARTE",
           "code": "STEELRISING",
@@ -162,40 +175,44 @@
         {
           "id": "saas",
           "title": "SAAS / PRODUCT",
-          "code": "YOUTUBE NAV",
-          "desc": "SMART EXTENSION BROWSER",
+          "code": "VOILA SMARTNAV",
+          "desc": "EXTENSION BROWSER YOUTUBE [ SHARE ]",
           "type": "EXTENSION",
           "status": "CONCEPTION",
           "visible": true,
           "version": "V 0.9",
           "full": true,
           "hasDetail": true,
-          "image": "media/_nuage2.png"
+          "image": "media/extVoilaFineNav.png",
+          "details": "Smart YouTube video navigation : enter 2 quick digits for exact percentage \n(e.g. 5 then 4 for 54%) or 1 digit for tens (9 for 90%). Skip ads by jumping to 99% !\n<a href=\"stuff\\Voila_SmartNav_v0.9.zip\">File</a> | <a href=\"https://www.google.com/search?q=How+to+Install+an+unpacked+extension+%3F\">Help</a>"
         },
         {
           "id": "motion",
           "title": "MOTION / VISUAL",
-          "code": "GOOGLE MAP BACK",
-          "desc": "SMART EXTENSION BROWSER",
+          "code": "VOILA GOTOMAPS",
+          "desc": "EXTENSION BROWSER GOOGLE > MAPS [ SHARE ]",
           "type": "EXTENSION",
           "status": "RÉALISATION",
           "visible": true,
           "full": true,
           "hasDetail": true,
-          "version": "V 0.5"
+          "version": "V 0.5",
+          "image": "media/voila_goToMaps.png",
+          "details": "Quickly jump to Google Maps coordinates or addresses from any google search with a single click.\n<a href=\"stuff\\Voila_GoToMaps_v0.5.zip\">File</a> | <a href=\"https://www.google.com/search?q=How+to+Install+an+unpacked+extension+%3F\">Help</a>"
         },
         {
           "id": "card_1792769668424",
           "title": "NOUVELLE CARTE",
-          "code": "NO GOOGLE AI",
-          "desc": "SMART EXTENSION BROWSER",
+          "code": "VOILA TOGGLEAI",
+          "desc": "EXTENSION BROWSER GOOGLE SEARCH [ SHARE ]",
           "type": "EXTENSION",
           "status": "ACTIF",
-          "image": "media/_placeholder.png",
+          "image": "media/voila_toggleAi.png",
           "visible": true,
           "version": "V 0.8",
           "full": true,
-          "hasDetail": true
+          "hasDetail": true,
+          "details": "Instantly toggle Google AI overviews on or off.\n<a href=\"stuff\\Voila_ToggleAi_0.8.zip\">File</a> | <a href=\"https://www.google.com/search?q=How+to+Install+an+unpacked+extension+%3F\">Help</a>"
         },
         {
           "id": "card_1792769674294",
@@ -367,6 +384,19 @@
       "showMedia": true
     },
     {
+      "id": "card_1793281693766",
+      "title": "NOUVELLE CARTE",
+      "code": "CODE",
+      "desc": "Description du projet ou du service.",
+      "type": "IDENTITÉ",
+      "status": "ACTIF",
+      "image": "media/_placeholder.png",
+      "visible": true,
+      "full": true,
+      "hasDetail": true,
+      "details": "<a href=\"stuff/view_to_cam.zip\" download>Link</a>"
+    },
+    {
       "id": "card_1792768713294",
       "title": "NOUVELLE CARTE",
       "code": "STEELRISING",
@@ -451,40 +481,44 @@
     {
       "id": "saas",
       "title": "SAAS / PRODUCT",
-      "code": "YOUTUBE NAV",
-      "desc": "SMART EXTENSION BROWSER",
+      "code": "VOILA SMARTNAV",
+      "desc": "EXTENSION BROWSER YOUTUBE [ SHARE ]",
       "type": "EXTENSION",
       "status": "CONCEPTION",
       "visible": true,
       "version": "V 0.9",
       "full": true,
       "hasDetail": true,
-      "image": "media/_nuage2.png"
+      "image": "media/extVoilaFineNav.png",
+      "details": "Smart YouTube video navigation : enter 2 quick digits for exact percentage \n(e.g. 5 then 4 for 54%) or 1 digit for tens (9 for 90%). Skip ads by jumping to 99% !\n<a href=\"stuff\\Voila_SmartNav_v0.9.zip\">File</a> | <a href=\"https://www.google.com/search?q=How+to+Install+an+unpacked+extension+%3F\">Help</a>"
     },
     {
       "id": "motion",
       "title": "MOTION / VISUAL",
-      "code": "GOOGLE MAP BACK",
-      "desc": "SMART EXTENSION BROWSER",
+      "code": "VOILA GOTOMAPS",
+      "desc": "EXTENSION BROWSER GOOGLE > MAPS [ SHARE ]",
       "type": "EXTENSION",
       "status": "RÉALISATION",
       "visible": true,
       "full": true,
       "hasDetail": true,
-      "version": "V 0.5"
+      "version": "V 0.5",
+      "image": "media/voila_goToMaps.png",
+      "details": "Quickly jump to Google Maps coordinates or addresses from any google search with a single click.\n<a href=\"stuff\\Voila_GoToMaps_v0.5.zip\">File</a> | <a href=\"https://www.google.com/search?q=How+to+Install+an+unpacked+extension+%3F\">Help</a>"
     },
     {
       "id": "card_1792769668424",
       "title": "NOUVELLE CARTE",
-      "code": "NO GOOGLE AI",
-      "desc": "SMART EXTENSION BROWSER",
+      "code": "VOILA TOGGLEAI",
+      "desc": "EXTENSION BROWSER GOOGLE SEARCH [ SHARE ]",
       "type": "EXTENSION",
       "status": "ACTIF",
-      "image": "media/_placeholder.png",
+      "image": "media/voila_toggleAi.png",
       "visible": true,
       "version": "V 0.8",
       "full": true,
-      "hasDetail": true
+      "hasDetail": true,
+      "details": "Instantly toggle Google AI overviews on or off.\n<a href=\"stuff\\Voila_ToggleAi_0.8.zip\">File</a> | <a href=\"https://www.google.com/search?q=How+to+Install+an+unpacked+extension+%3F\">Help</a>"
     },
     {
       "id": "card_1792769674294",

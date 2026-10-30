@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
   <title>BRICEMG / CMS WYSIWYG</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='12' fill='%2361afef'/%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -24,7 +25,7 @@
     </p>
     <div class="field">
       <label for="secret">Clé d'accès</label>
-      <input id="secret" type="password" placeholder="Clé d'accès (défaut : bricemg)" />
+      <input id="secret" type="password" placeholder="Clé d'accès" autocomplete="current-password" />
     </div>
     <div class="actions">
       <button id="loginBtn">Ouvrir le Mode CMS</button>
