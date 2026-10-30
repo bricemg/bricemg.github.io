@@ -393,6 +393,27 @@ visual / code / tools & stuff</textarea>
         </div>
       </div>
     </div>
+    <!-- Insert Link Modal (Solution Options 1 & 2) -->
+    <div id="detailLinkModal" class="cms-modal-backdrop cms-link-modal" role="dialog" aria-modal="true" aria-hidden="true">
+      <div class="cms-modal-box cms-link-modal-box">
+        <div class="cms-modal-tag">HYPERLIEN / RACCOURCI CTRL+K</div>
+        <h4 class="cms-modal-title">INSÉRER UN LIEN</h4>
+        <div class="cms-link-modal-fields">
+          <div class="field" style="margin-bottom: 0;">
+            <label for="detailLinkText">Texte du lien (Libellé)</label>
+            <input id="detailLinkText" type="text" placeholder="Ex: Télécharger le plugin" autocomplete="off" />
+          </div>
+          <div class="field" style="margin-bottom: 0;">
+            <label for="detailLinkUrl">Adresse cible (URL ou chemin local)</label>
+            <input id="detailLinkUrl" type="text" placeholder="Ex: stuff/time_animation.zip ou https://..." autocomplete="off" />
+          </div>
+        </div>
+        <div class="cms-modal-actions">
+          <button id="detailLinkCancelBtn" type="button" class="secondary">Annuler</button>
+          <button id="detailLinkOkBtn" type="button" class="cms-modal-confirm-btn cms-link-modal-ok">Insérer le lien</button>
+        </div>
+      </div>
+    </div>
     <!-- Toast Feedback -->
     <div id="cmsToast" class="cms-toast">Modifié avec succès</div>
     <!-- Main Live WYSIWYG Workspace -->

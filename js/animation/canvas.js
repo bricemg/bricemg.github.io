@@ -30,7 +30,7 @@ class CanvasAnimation {
 
     this.refreshColors();
 
-    // 2. Gentle motion instead of total freeze for prefers-reduced-motion
+    // Gentle motion instead of total freeze for prefers-reduced-motion
     this.still = window.matchMedia('(prefers-reduced-motion: reduce)');
     this.isReducedMotion = this.still.matches;
     if (this.still.addEventListener) {
@@ -43,10 +43,11 @@ class CanvasAnimation {
   refreshColors() {
     const style = getComputedStyle(document.documentElement);
     this.INK = (style.getPropertyValue('--ink') || '#0a0a0a').trim() || '#0a0a0a';
+    this.INK_SOFT = (style.getPropertyValue('--ink-soft') || '#6b6b6b').trim() || '#6b6b6b';
     this.PAPER = (style.getPropertyValue('--cell') || '#f0f0f0').trim() || '#f0f0f0';
   }
 
-  // 1. Robust measurement with fallback
+  // Robust measurement with fallback
   measure() {
     const parent = this.canvas.parentElement;
     const r = parent ? parent.getBoundingClientRect() : null;
@@ -76,9 +77,13 @@ class CanvasAnimation {
   seed() {
     const n = this.idealCount();
     const big = Math.min(this.w, this.h) < 160 ? 6.5 : 8.5;
+
+    // Number of "soft" circles : between 5 and 10, capped by n
+    const softCount = Math.floor(n / 10)//Math.min(n, 5 + Math.floor(Math.random() * 6));
+
     this.bodies = [];
     for (let i = 0; i < n; i++) {
-      const rad = 3 + Math.pow(Math.random(), 1.8) * big;
+      const rad = 2 + 8 * Math.random()//3 + Math.pow(Math.random(), 1.8) * big;
       const sp = this.VMIN + Math.random() * (this.VMAX - this.VMIN);
       const a = Math.random() * Math.PI * 2;
       this.bodies.push({
@@ -87,7 +92,8 @@ class CanvasAnimation {
         vx: Math.cos(a) * sp,
         vy: Math.sin(a) * sp,
         r: rad,
-        m: rad * rad
+        m: rad * rad,
+        soft: i < softCount
       });
     }
   }
@@ -193,19 +199,43 @@ class CanvasAnimation {
     this.refreshColors();
     this.ctx.fillStyle = this.PAPER;
     this.ctx.fillRect(0, 0, this.w, this.h);
-    this.ctx.fillStyle = this.INK;
 
     for (let i = 0; i < this.bodies.length; i++) {
       const b = this.bodies[i];
+      this.ctx.fillStyle = b.soft ? this.INK_SOFT : this.INK;
       this.ctx.beginPath();
       this.ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
       this.ctx.fill();
     }
   }
 
+
+  // draw() {
+  //   this.refreshColors();
+  //   this.ctx.fillStyle = this.PAPER;
+  //   this.ctx.fillRect(0, 0, this.w, this.h);
+
+  //   for (let i = 0; i < this.bodies.length; i++) {
+  //     const b = this.bodies[i];
+  //     this.drawCross(b.x, b.y, b.r, b.soft ? this.INK_SOFT : this.INK);
+  //   }
+  // }
+
+  // drawCross(x, y, r, color) {
+  //   const arm = r * 0.75;
+  //   const thick = Math.max(1.5, r * 1.5);
+  //   this.ctx.save();
+  //   this.ctx.translate(x, y);
+  //   this.ctx.rotate(0 * Math.PI / 4);
+  //   this.ctx.fillStyle = color;
+  //   this.ctx.fillRect(-arm, -thick / 2, arm * 2, thick);
+  //   this.ctx.fillRect(-thick / 2, -arm, thick, arm * 2);
+  //   this.ctx.restore();
+  // }
+
   frame = (now) => {
     let dt = this.last ? Math.min((now - this.last) / 16.667, 2.5) : 1;
-    // 2. If reduced-motion is requested by browser/system, slow down gently instead of freezing
+    // If reduced-motion is requested by browser/system, slow down gently instead of freezing
     if (this.isReducedMotion) {
       dt *= 0.35;
     }
@@ -230,13 +260,14 @@ class CanvasAnimation {
   }
 
   init(element) {
+    this.element = element;
     this.isVisible = true;
     this.measure();
     this.seed();
     this.draw();
     this.start();
 
-    // 1. ResizeObserver for accurate sizing across Canary, Opera, Chrome
+    // ResizeObserver for accurate sizing across Canary, Opera, Chrome
     if (window.ResizeObserver) {
       this.resizeObserver = new ResizeObserver((entries) => {
         for (let entry of entries) {
@@ -256,7 +287,7 @@ class CanvasAnimation {
       this.resizeObserver.observe(element);
     }
 
-    // 2. IntersectionObserver : pause les calculs physiques quand le canvas n'est pas dans le viewport
+    // IntersectionObserver : pause les calculs physiques quand le canvas n'est pas dans le viewport
     if ('IntersectionObserver' in window) {
       this.intersectionObserver = new IntersectionObserver((entries) => {
         for (let entry of entries) {
@@ -297,7 +328,7 @@ class CanvasAnimation {
       if (this.isVisible) this.start();
     });
 
-    // 3. Redraw & wake loop on focus and visibility change
+    // Redraw & wake loop on focus and visibility change
     document.addEventListener('visibilitychange', () => {
       if (!document.hidden && this.isVisible) {
         this.last = 0;

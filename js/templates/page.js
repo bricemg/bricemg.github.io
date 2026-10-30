@@ -412,10 +412,17 @@
           </dl>
 
           <div class="card-detail-section-title"></div>
-          
+          ${isEditable ? `
+          <div class="cms-detail-link-bar" style="margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+            <button type="button" class="cms-detail-link-btn" data-action="insert-detail-link" title="Insérer un lien ou un fichier (Raccourci : Ctrl+K)" style="display: inline-flex; align-items: center; gap: 6px;">
+              <span>🔗 Insérer un lien</span>
+              <kbd style="background: rgba(255,255,255,0.12); padding: 1px 6px; border-radius: 4px; font-size: 9px; font-family: inherit; font-weight: 700; color: var(--odp-cyan, #56b6c2);">Ctrl+K</kbd>
+            </button>
+            <span style="font-size: 10px; color: var(--odp-fg-soft, #828997); letter-spacing: 0.04em;">Surlignez un mot puis cliquez ou faites Ctrl+K</span>
+          </div>` : ''}
           <div class="card-detail-text ${isEditable ? 'cms-editable' : ''}" id="detailCardLongText" ${isEditable ? 'contenteditable="true" spellcheck="false" data-field="details"' : ''}>
           </div>
-          ${isEditable ? '<div class="cms-card-edit-hint" style="text-align: left; margin-top: 8px;">✎ Notes éditables. Lien : &lt;a href="https://exemple.com"&gt;Texte cliquable&lt;/a&gt; — ou coller une URL https://…</div>' : ''}
+          ${isEditable ? '<div class="cms-card-edit-hint" style="text-align: left; margin-top: 8px;">✎</div>' : ''}
         </div>
       </div>
     </div>

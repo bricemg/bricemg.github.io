@@ -869,8 +869,9 @@ body.cms-preview-mode .cms-media-overlay {
   border-color: var(--odp-blue);
 }
 
-.cms-link-modal {
-  z-index: 2600;
+.cms-link-modal,
+#detailLinkModal {
+  z-index: 3100 !important;
 }
 
 .cms-link-modal-box {
@@ -1006,7 +1007,7 @@ body.cms-preview-mode .cms-media-overlay {
   background: rgba(15, 17, 21, 0.78);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
-  z-index: 2000;
+  z-index: 3000;
   display: flex;
   align-items: center;
   justify-content: center;

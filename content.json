@@ -43,19 +43,6 @@
       "visible": true,
       "items": [
         {
-          "id": "card_1793280045569",
-          "title": "NOUVELLE CARTE",
-          "code": "CODE",
-          "desc": "Description du projet ou du service.",
-          "type": "IDENTITÉ",
-          "status": "ACTIF",
-          "image": "media/_placeholder.png",
-          "visible": true,
-          "full": true,
-          "hasDetail": true,
-          "details": "<a href=\"stuff/time_animation.zip\" download>Link</a>"
-        },
-        {
           "id": "branding",
           "title": "IDENTITÉ VISUELLE",
           "code": "PORTFOLIO 2026",
@@ -70,19 +57,6 @@
           "details": "Update and refresh of my portfolio with a selection of nice projects\nFollow that link : <a href=\"https://www.dropbox.com/scl/fi/9ktg2v06xsg4h4uo2dtpn/Book_DaProd_BriceMG_2506.pdf?rlkey=isqsquj1uj1q2do4wu2jibxlc&st=gg32tdrr&dl=0\">Link</a>",
           "media": true,
           "showMedia": true
-        },
-        {
-          "id": "card_1793281693766",
-          "title": "NOUVELLE CARTE",
-          "code": "CODE",
-          "desc": "Description du projet ou du service.",
-          "type": "IDENTITÉ",
-          "status": "ACTIF",
-          "image": "media/_placeholder.png",
-          "visible": true,
-          "full": true,
-          "hasDetail": true,
-          "details": "<a href=\"stuff/view_to_cam.zip\" download>Link</a>"
         },
         {
           "id": "card_1792768713294",
@@ -355,19 +329,6 @@
   },
   "cards": [
     {
-      "id": "card_1793280045569",
-      "title": "NOUVELLE CARTE",
-      "code": "CODE",
-      "desc": "Description du projet ou du service.",
-      "type": "IDENTITÉ",
-      "status": "ACTIF",
-      "image": "media/_placeholder.png",
-      "visible": true,
-      "full": true,
-      "hasDetail": true,
-      "details": "<a href=\"stuff/time_animation.zip\" download>Link</a>"
-    },
-    {
       "id": "branding",
       "title": "IDENTITÉ VISUELLE",
       "code": "PORTFOLIO 2026",
@@ -382,19 +343,6 @@
       "details": "Update and refresh of my portfolio with a selection of nice projects\nFollow that link : <a href=\"https://www.dropbox.com/scl/fi/9ktg2v06xsg4h4uo2dtpn/Book_DaProd_BriceMG_2506.pdf?rlkey=isqsquj1uj1q2do4wu2jibxlc&st=gg32tdrr&dl=0\">Link</a>",
       "media": true,
       "showMedia": true
-    },
-    {
-      "id": "card_1793281693766",
-      "title": "NOUVELLE CARTE",
-      "code": "CODE",
-      "desc": "Description du projet ou du service.",
-      "type": "IDENTITÉ",
-      "status": "ACTIF",
-      "image": "media/_placeholder.png",
-      "visible": true,
-      "full": true,
-      "hasDetail": true,
-      "details": "<a href=\"stuff/view_to_cam.zip\" download>Link</a>"
     },
     {
       "id": "card_1792768713294",
