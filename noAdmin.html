@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>BRICEMG / CMS WYSIWYG</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='12' fill='%2361afef'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Doto:ROND,wght@0..100,300..900&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Space+Mono:wght@400;700&family=Syne:wght@500;700;800&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="css/admin-sections.css" />
+</head>
+
+<body>
+  <!-- Auth screen if not logged in -->
+  <div id="authPanel" class="auth-panel">
+    <h2>CMS Studio</h2>
+    <p style="font-size: 11px; color: var(--ink-soft); margin-bottom: 20px;">
+      Entrez votre clé d'accès pour activer le mode d'édition WYSIWYG.
+    </p>
+    <div class="field">
+      <label for="secret">Clé d'accès</label>
+      <input id="secret" type="password" placeholder="Clé d'accès" autocomplete="current-password" />
+    </div>
+    <div class="actions">
+      <button id="loginBtn">Ouvrir le Mode CMS</button>
+    </div>
+  </div>
+  <!-- Live WYSIWYG Studio -->
+  <div id="cmsContainer" class="hidden">
+    <!-- Left Side CMS Sidebar -->
+    <aside id="cmsSidebar" class="cms-sidebar" aria-label="CMS Navigation et Réglages">
+      <div class="cms-sidebar-header">
+        <div class="cms-sidebar-brand">
+          <span class="cms-dot-pulse"></span>
+          <span>MNML CMS</span>
+        </div>
+        <button id="collapseSidebarBtn" class="cms-sidebar-toggle-btn" type="button"
+          title="Réduire le panneau (Masquer)">
+          Réduire
+        </button>
+      </div>
+      <div class="cms-sidebar-body">
+        <!-- 1. ACTION -->
+        <div class="cms-sidebar-section">
+          <div class="cms-sidebar-section-title">Action</div>
+          <div class="cms-action-buttons">
+            <button id="saveBtn" class="cms-sidebar-btn primary" type="button"
+              title="Enregistrer localement (localStorage)">
+              Enregistrer (Local)
+            </button>
+            <button id="exportBtn" class="cms-sidebar-btn primary" type="button"
+              title="Télécharger le fichier content.json pour Git"
+              style="background: var(--red); border-color: var(--red); color: #fff;">
+              Exporter content.json
+            </button>
+            <button id="togglePreviewBtn" class="cms-sidebar-btn" type="button"
+              title="Masquer les outils pour voir le rendu visiteur exact">
+              Aperçu Direct
+            </button>
+            <button id="resetBtn" class="cms-sidebar-btn secondary" type="button"
+              title="Réinitialiser tout le site par défaut">
+              Réinitialiser
+            </button>
+            <a href="index.html" class="cms-sidebar-btn link-btn" target="_blank" title="Ouvrir le site visiteur">
+              Voir le site
+            </a>
+          </div>
+        </div>
+        <!-- 2. COULEURS & GRADIENTS DU THÈME -->
+        <div class="cms-sidebar-section">
+          <div class="cms-sidebar-section-title">Gradients & Couleurs du thème</div>
+
+          <!-- 1. Gradient Fond -->
+          <div class="cms-gradient-group">
+            <div class="cms-gradient-title">
+              <span>1. Gradient de fond (Page)</span>
+              <span id="themeBgAngleVal" class="radius-badge">135°</span>
+            </div>
+            <div class="cms-gradient-row">
+              <div class="field" style="margin-bottom: 0;">
+                <label>Départ</label>
+                <div class="color-picker-row">
+                  <input id="themeBgStartPicker" class="color-swatch" type="color" value="#e3e3e3" />
+                  <input id="themeBgStart" type="text" value="#e3e3e3" placeholder="#e3e3e3" />
+                </div>
+              </div>
+              <div class="field" style="margin-bottom: 0;">
+                <label>Arrivée</label>
+                <div class="color-picker-row">
+                  <input id="themeBgEndPicker" class="color-swatch" type="color" value="#d6d6d6" />
+                  <input id="themeBgEnd" type="text" value="#d6d6d6" placeholder="#d6d6d6" />
+                </div>
+              </div>
+            </div>
+            <div class="field" style="margin-top: 10px; margin-bottom: 0;">
+              <label for="themeBgAngleRange" style="margin-bottom: 4px;">Angle d'inclinaison</label>
+              <input type="range" id="themeBgAngleRange" min="0" max="360" step="5" value="135" />
+            </div>
+          </div>
+
+          <!-- 2. Gradient Cartes / Blocs -->
+          <div class="cms-gradient-group">
+            <div class="cms-gradient-title">
+              <span>2. Cartes & Blocs</span>
+              <span id="themeCellAngleVal" class="radius-badge">145°</span>
+            </div>
+            <div class="cms-gradient-row">
+              <div class="field" style="margin-bottom: 0;">
+                <label>Départ</label>
+                <div class="color-picker-row">
+                  <input id="themeCellStartPicker" class="color-swatch" type="color" value="#f0f0f0" />
+                  <input id="themeCellStart" type="text" value="#f0f0f0" placeholder="#f0f0f0" />
+                </div>
+              </div>
+              <div class="field" style="margin-bottom: 0;">
+                <label>Arrivée</label>
+                <div class="color-picker-row">
+                  <input id="themeCellEndPicker" class="color-swatch" type="color" value="#e6e6e6" />
+                  <input id="themeCellEnd" type="text" value="#e6e6e6" placeholder="#e6e6e6" />
+                </div>
+              </div>
+            </div>
+            <div class="field" style="margin-top: 10px; margin-bottom: 0;">
+              <label for="themeCellAngleRange" style="margin-bottom: 4px;">Angle d'inclinaison</label>
+              <input type="range" id="themeCellAngleRange" min="0" max="360" step="5" value="145" />
+            </div>
+          </div>
+
+          <!-- 3. Gradient Contours & Séparateurs -->
+          <div class="cms-gradient-group">
+            <div class="cms-gradient-title">
+              <span>3. Contours & Séparateurs</span>
+              <span id="themeBorderAngleVal" class="radius-badge">135°</span>
+            </div>
+            <div class="cms-gradient-row">
+              <div class="field" style="margin-bottom: 0;">
+                <label>Départ</label>
+                <div class="color-picker-row">
+                  <input id="themeBorderStartPicker" class="color-swatch" type="color" value="#d8d8d8" />
+                  <input id="themeBorderStart" type="text" value="#d8d8d8" placeholder="#d8d8d8" />
+                </div>
+              </div>
+              <div class="field" style="margin-bottom: 0;">
+                <label>Arrivée</label>
+                <div class="color-picker-row">
+                  <input id="themeBorderEndPicker" class="color-swatch" type="color" value="#c4c4c4" />
+                  <input id="themeBorderEnd" type="text" value="#c4c4c4" placeholder="#c4c4c4" />
+                </div>
+              </div>
+            </div>
+            <div class="field" style="margin-top: 10px; margin-bottom: 0;">
+              <label for="themeBorderAngleRange" style="margin-bottom: 4px;">Angle d'inclinaison</label>
+              <input type="range" id="themeBorderAngleRange" min="0" max="360" step="5" value="135" />
+            </div>
+          </div>
+          <div class="field">
+            <label>Couleur du texte principal</label>
+            <div class="color-picker-row">
+              <input id="themeTextPicker" class="color-swatch" type="color" value="#2e2e2e" />
+              <input id="themeText" type="text" value="#2e2e2e" placeholder="#2e2e2e" />
+            </div>
+          </div>
+          <div class="field">
+            <label>Couleur du texte secondaire</label>
+            <div class="color-picker-row">
+              <input id="themeTextSoftPicker" class="color-swatch" type="color" value="#585858" />
+              <input id="themeTextSoft" type="text" value="#585858" placeholder="#585858" />
+            </div>
+          </div>
+          <div class="field">
+            <label>Couleur du texte discret</label>
+            <div class="color-picker-row">
+              <input id="themeTextFaintPicker" class="color-swatch" type="color" value="#9b9b9b" />
+              <input id="themeTextFaint" type="text" value="#9b9b9b" placeholder="#9b9b9b" />
+            </div>
+          </div>
+          <div class="field">
+            <label>Couleur d'accent (Pastilles & détails)</label>
+            <div class="color-picker-row">
+              <input id="themeAccentPicker" class="color-swatch" type="color" value="#d71921" />
+              <input id="themeAccent" type="text" value="#d71921" placeholder="#d71921" />
+            </div>
+          </div>
+          <label class="cms-field-sub">Palettes rapides</label>
+          <div class="preset-buttons">
+            <button type="button" class="preset-btn" data-preset="default">Studio Gris</button>
+            <button type="button" class="preset-btn" data-preset="dark">Dark Minimal</button>
+            <button type="button" class="preset-btn" data-preset="white">Pur Blanc</button>
+            <button type="button" class="preset-btn" data-preset="warm">Sépia Papier</button>
+            <button type="button" class="preset-btn" data-preset="cyber">Matrix / Vert</button>
+          </div>
+        </div>
+        <!-- 3. TYPOGRAPHIE DU SITE -->
+        <div class="cms-sidebar-section">
+          <div class="cms-sidebar-section-title">Typographie du site</div>
+          <div class="field">
+            <label for="themeFontDot">Police des titres & chiffres (Dot)</label>
+            <select id="themeFontDot" class="cms-select">
+              <option value="'Doto', ui-monospace, monospace">Doto (Matrice de points)</option>
+              <option value="'IBM Plex Mono', monospace">IBM Plex Mono (Technique)</option>
+              <option value="'Space Mono', monospace">Space Mono (Rétro-futuriste)</option>
+              <option value="'Syne', sans-serif">Syne (Design audacieux)</option>
+              <option value="'Inter', sans-serif">Inter (Moderne sans-serif)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="themeFontMono">Police du texte & corps</label>
+            <select id="themeFontMono" class="cms-select">
+              <option value="'IBM Plex Mono', ui-monospace, monospace">IBM Plex Mono (Défaut)</option>
+              <option value="'JetBrains Mono', monospace">JetBrains Mono (Précision)</option>
+              <option value="'Space Mono', monospace">Space Mono (Caractère)</option>
+              <option value="'Inter', sans-serif">Inter (Sans-serif fluide)</option>
+              <option value="ui-monospace, SFMono-Regular, monospace">Monospace Système</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="themeFontSize">Taille de base du texte</label>
+            <select id="themeFontSize" class="cms-select">
+              <option value="10px">10px — Très compact</option>
+              <option value="11px">11px — Compact</option>
+              <option value="12px" selected>12px — Standard (Défaut)</option>
+              <option value="13px">13px — Confort</option>
+              <option value="14px">14px — Grand</option>
+              <option value="15px">15px — Très grand</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="themeTextTransform">Casse du texte</label>
+            <select id="themeTextTransform" class="cms-select">
+              <option value="uppercase" selected>TOUT EN MAJUSCULES (Studio)</option>
+              <option value="none">Casse normale (Minuscules/Majuscules)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="themeLetterSpacing">Espacement des lettres</label>
+            <select id="themeLetterSpacing" class="cms-select">
+              <option value="0.005em">0.005em — Très serré</option>
+              <option value="0.01em">0.01em — Serré</option>
+              <option value="0.02em" selected>0.02em — Standard (Défaut)</option>
+              <option value="0.035em">0.035em — Aéré</option>
+              <option value="0.05em">0.05em — Très aéré</option>
+            </select>
+          </div>
+        </div>
+        <!-- 4. ARRONDI DES CARTES & SECTIONS -->
+        <div class="cms-sidebar-section">
+          <div class="cms-sidebar-section-title">Arrondi des cartes & sections</div>
+          <div class="field">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <label for="themeBorderRadiusRange" style="margin: 0;">Ajustement au pixel près</label>
+              <span id="themeBorderRadiusVal" class="radius-badge">22px</span>
+            </div>
+            <input type="range" id="themeBorderRadiusRange" min="0" max="48" step="1" value="22" />
+          </div>
+        </div>
+        <!-- 5. INFORMATION DU SITE & HEADER -->
+        <div class="cms-sidebar-section">
+          <div class="cms-sidebar-section-title">En-tête</div>
+          <div class="field">
+            <label>Cellule 1 — Titre</label>
+            <input id="cell1Title" type="text" value="BRICEMG" />
+          </div>
+          <div class="field">
+            <label>Cellule 1 — Contenu (Saut de ligne = nouveau groupe ; 1ère ligne du groupe = Ink, suivantes = Ink
+              Soft)</label>
+            <textarea id="cell1Body" rows="6">STUDIO
+DESIGN / CODE / VISION
+
+INDEX V0.1
+LANGUAGE : EN</textarea>
+          </div>
+          <div class="field">
+            <label>Cellule 2 — Titre</label>
+            <input id="cell2Title" type="text" value="ABOUT" />
+          </div>
+          <div class="field">
+            <label>Cellule 2 — Contenu (Saut de ligne = nouveau groupe ; 1ère ligne du groupe = Ink, suivantes = Ink
+              Soft)</label>
+            <textarea id="cell2Body" rows="8">CREATE
+I create interfaces, visual identities, and web experiences that bring meaning to an idea.
+
+THINKING
+DESIGN, CRAFT AND DEVELOP FROM END TO END
+
+OBJECTIVE
+I craft and build projects at the crossroads of design, product, and code.</textarea>
+          </div>
+          <div class="field">
+            <label>Cellule 3 — Phrase d'accueil (Hero Claim)</label>
+            <textarea id="heroClaim">From Idea to projects !
+visual / code / tools & stuff</textarea>
+          </div>
+          <label class="cms-sidebar-section-title">Pied de page (Footer)</label>
+          <div class="field">
+            <label>Footer - Colonne 1</label>
+            <input id="footerCol1" type="text" value="BRICEMG" />
+          </div>
+          <div class="field">
+            <label>Footer - Colonne 2</label>
+            <input id="footerCol2" type="text" value="DESIGN / CODE / VISION" />
+          </div>
+          <div class="field">
+            <label>Footer - Colonne 3</label>
+            <input id="footerCol3" type="text" value="DESIGN / CODE / VISION" />
+          </div>
+          <div class="field">
+            <label>Footer - Colonne 4 (Email)</label>
+            <input id="footerCol4" type="text" value="bonjour@bricemg.dev" />
+          </div>
+          <div class="field">
+            <label>Footer - Colonne 5 (Copyright)</label>
+            <input id="footerCol5" type="text" value="© 2026" />
+          </div>
+        </div>
+      </div>
+    </aside>
+    <!-- Expand Trigger Button -->
+    <button id="expandSidebarBtn" class="cms-expand-trigger hidden" type="button" title="Déplier le panneau CMS">
+      <span>►</span>
+      <span>MENU CMS</span>
+    </button>
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="cms-modal-backdrop" role="dialog" aria-modal="true">
+      <div class="cms-modal-box">
+        <div class="cms-modal-tag">VALIDATION REQUISE</div>
+        <h4 id="confirmTitle" class="cms-modal-title">SUPPRIMER CET ÉLÉMENT ?</h4>
+        <p id="confirmText" class="cms-modal-text">Cette action est irréversible.</p>
+        <div class="cms-modal-actions">
+          <button id="confirmCancelBtn" type="button" class="secondary">Annuler</button>
+          <button id="confirmActionBtn" type="button" class="cms-modal-confirm-btn">Supprimer</button>
+        </div>
+      </div>
+    </div>
+    <!-- Media Selection Modal (Solution 2 - Dossier media/) -->
+    <div id="mediaModal" class="cms-modal-backdrop" role="dialog" aria-modal="true">
+      <div class="cms-modal-box" style="max-width: 480px;">
+        <div class="cms-modal-tag">DOSSIER MEDIA / WORKFLOW</div>
+        <h4 id="mediaModalTitle" class="cms-modal-title">IMAGE DE LA CARTE</h4>
+
+        <div class="cms-media-info-box">
+          <div class="cms-media-info-preview">
+            <img id="mediaModalPreview" src="media/_placeholder.png" alt="Aperçu"
+              style="width: 100%; height: 100%; object-fit: cover;"
+              onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 80 50\'%3E%3Crect width=\'100%25\' height=\'100%25\' fill=\'%23120f24\'/%3E%3Ctext x=\'50%25\' y=\'52%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%23afa6e3\' font-family=\'monospace\' font-size=\'8\'%3EMEDIA%3C/text%3E%3C/svg%3E';" />
+          </div>
+          <div style="min-width: 0; flex: 1;">
+            <div class="cms-media-info-label">Emplacement dans media/</div>
+            <div id="mediaModalCurrentPath" class="cms-media-info-path">media/_placeholder.png</div>
+          </div>
+        </div>
+
+        <div class="field" style="margin-bottom: 14px;">
+          <label style="margin-bottom: 6px;">1. Choisir un fichier depuis votre appareil</label>
+          <input type="file" id="mediaModalFileInput" accept="image/*" style="display: none;" />
+          <button type="button" id="mediaModalBrowseBtn" class="cms-sidebar-btn"
+            style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
+            <span>📁</span>
+            <span>Parcourir les fichiers images...</span>
+          </button>
+        </div>
+
+        <div class="field" style="margin-bottom: 14px;">
+          <label for="mediaModalPathInput" style="margin-bottom: 6px;">2. Ou nom / chemin du fichier dans
+            [media]</label>
+          <input type="text" id="mediaModalPathInput" value="media/_placeholder.png"
+            placeholder="media/mon-image.png" />
+        </div>
+
+        <div class="cms-media-tip-box">
+          <strong style="color: var(--odp-fg-bright);">Rappel Déploiement Git / GitHub Pages :</strong>
+          <br />• Placez le fichier dans le dossier <code>media/</code> local puis commitez-le
+          (<code>git add media/</code>).
+          <br />• Le fichier <code>.nojekyll</code> à la racine garantit que GitHub Pages publie tous vos fichiers, y
+          compris ceux commençant par un underscore (<code>_nuage.png</code>).
+          <div id="mediaModalDownloadWrap" style="margin-top: 10px; display: none;">
+            <button type="button" id="mediaModalDownloadBtn" class="cms-sidebar-btn"
+              style="width: auto; padding: 6px 12px; font-size: 10px;">
+              ⬇ Télécharger une copie pour le dossier media/
+            </button>
+          </div>
+        </div>
+
+        <div class="cms-modal-actions">
+          <button id="mediaModalCancelBtn" type="button" class="secondary">Annuler</button>
+          <button id="mediaModalSaveBtn" type="button" class="cms-modal-confirm-btn"
+            style="background: var(--odp-blue) !important; color: #1e2227 !important;">Appliquer à la carte</button>
+        </div>
+      </div>
+    </div>
+    <!-- Insert Link Modal (Solution Options 1 & 2) -->
+    <div id="detailLinkModal" class="cms-modal-backdrop cms-link-modal" role="dialog" aria-modal="true" aria-hidden="true">
+      <div class="cms-modal-box cms-link-modal-box">
+        <div class="cms-modal-tag">HYPERLIEN / RACCOURCI CTRL+K</div>
+        <h4 class="cms-modal-title">INSÉRER UN LIEN</h4>
+        <div class="cms-link-modal-fields">
+          <div class="field" style="margin-bottom: 0;">
+            <label for="detailLinkText">Texte du lien (Libellé)</label>
+            <input id="detailLinkText" type="text" placeholder="Ex: Télécharger le plugin" autocomplete="off" />
+          </div>
+          <div class="field" style="margin-bottom: 0;">
+            <label for="detailLinkUrl">Adresse cible (URL ou chemin local)</label>
+            <input id="detailLinkUrl" type="text" placeholder="Ex: stuff/time_animation.zip ou https://..." autocomplete="off" />
+          </div>
+        </div>
+        <div class="cms-modal-actions">
+          <button id="detailLinkCancelBtn" type="button" class="secondary">Annuler</button>
+          <button id="detailLinkOkBtn" type="button" class="cms-modal-confirm-btn cms-link-modal-ok">Insérer le lien</button>
+        </div>
+      </div>
+    </div>
+    <!-- Toast Feedback -->
+    <div id="cmsToast" class="cms-toast">Modifié avec succès</div>
+    <!-- Main Live WYSIWYG Workspace -->
+    <main id="cmsWorkspace" class="cms-workspace">
+      <div id="app"></div>
+    </main>
+  </div>
+  <!-- Scripts -->
+  <script src="js/utils/storage.js"></script>
+  <script src="js/templates/page.js"></script>
+  <script src="js/animation/canvas.js"></script>
+  <script src="js/admin/wysiwyg.js"></script>
+</body>
+
+</html>
