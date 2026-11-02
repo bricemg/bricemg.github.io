@@ -104,7 +104,7 @@
         {
           "id": "card_1793141109361",
           "title": "NOUVELLE CARTE",
-          "code": "WIND RIDER",
+          "code": "CARBON RIDER",
           "desc": "WEBAPP FOR MOBILITY ECO FRIENDLY",
           "type": "WEBAPP",
           "status": "ACTIF",
@@ -132,7 +132,7 @@
         {
           "id": "card_1793141191586",
           "title": "NOUVELLE CARTE",
-          "code": "CARBON RIDER",
+          "code": "WIND RIDER",
           "desc": "WEBAPP FOR MOBILITY ECO FRIENDLY",
           "type": "WEBAPP",
           "status": "ACTIF",
@@ -430,7 +430,7 @@
     {
       "id": "card_1793141109361",
       "title": "NOUVELLE CARTE",
-      "code": "WIND RIDER",
+      "code": "CARBON RIDER",
       "desc": "WEBAPP FOR MOBILITY ECO FRIENDLY",
       "type": "WEBAPP",
       "status": "ACTIF",
