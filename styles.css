@@ -194,6 +194,13 @@ img {
 }
 
 .cell--play {
+  background:
+    var(--cell-gradient) padding-box,
+    var(--border-gradient) border-box;
+  background-clip: padding-box, border-box;
+  cursor: crosshair;
+  overflow: hidden;
+  isolation: isolate;
   cursor: crosshair;
   overflow: hidden;
   isolation: isolate;

@@ -59,6 +59,20 @@
           "showMedia": true
         },
         {
+          "id": "card_1792768980386",
+          "title": "NOUVELLE CARTE",
+          "code": "WEB IS DEAD ...\nLONG LIVE THE AGENT !",
+          "desc": "REFLECTION POSTS AI UX:UI",
+          "type": "DESIGN",
+          "status": "ACTIF",
+          "image": "media/post_ai_agent2.png",
+          "visible": true,
+          "full": true,
+          "hasDetail": true,
+          "version": "FINAL",
+          "details": "A series of posts—part of a broader manifesto titled aUx:aUi—exploring the rise of AI agents and agentic browsers, and their impact on tech, development, and design (ergonomics & interface). <a href=\"https://lnkd.in/p/e3FSxnBr\">Post A</a> | ..."
+        },
+        {
           "id": "card_1792768713294",
           "title": "NOUVELLE CARTE",
           "code": "STEELRISING",
@@ -88,18 +102,18 @@
           "details": "This entire space [ backOffice + frontOffice ] is a clean, modern, zero-dependency portfolio built with native HTML, CSS, and vanilla JavaScript. It incorporates a live WYSIWYG CMS directly inside the browser, allowing real-time customization of text, projects, sections, typography, gradients, and layout without requiring any complex build setup or database. Still In Progress !"
         },
         {
-          "id": "card_1792768980386",
+          "id": "card_1793141109361",
           "title": "NOUVELLE CARTE",
-          "code": "WEB IS DEAD ...\nLONG LIVE THE AGENT !",
-          "desc": "REFLECTION POSTS AI UX:UI",
-          "type": "DESIGN",
+          "code": "WIND RIDER",
+          "desc": "WEBAPP FOR MOBILITY ECO FRIENDLY",
+          "type": "WEBAPP",
           "status": "ACTIF",
-          "image": "media/post_ai_agent2.png",
+          "image": "media/carboRider3.png",
           "visible": true,
+          "version": "V 0.8",
           "full": true,
           "hasDetail": true,
-          "version": "FINAL",
-          "details": "A series of posts—part of a broader manifesto titled aUx:aUi—exploring the rise of AI agents and agentic browsers, and their impact on tech, development, and design (ergonomics & interface). <a href=\"https://lnkd.in/p/e3FSxnBr\">Post A</a> | ..."
+          "details": "Measuring impact to drive sustainable engagement. This web app tracks soft mobility trips (cycling, walking…) and calculates real-time avoided CO₂ emissions compared to combustion engines. A gamified experience designed to turn low-carbon habits into measurable milestones—complete with goal tracking. Link soon ..."
         },
         {
           "id": "card_1792769309440",
@@ -114,20 +128,6 @@
           "full": true,
           "hasDetail": true,
           "details": "A series of posts—part of a broader manifesto—exploring how ( video ) game mechanics can be applied to standard websites and apps to enhance UX:UI ( User onboarding, Data, Task, ... )"
-        },
-        {
-          "id": "card_1793141109361",
-          "title": "NOUVELLE CARTE",
-          "code": "WIND RIDER",
-          "desc": "WEBAPP FOR MOBILITY ECO FRIENDLY",
-          "type": "WEBAPP",
-          "status": "ACTIF",
-          "image": "media/carboRider3.png",
-          "visible": true,
-          "version": "V 0.8",
-          "full": true,
-          "hasDetail": true,
-          "details": "Measuring impact to drive sustainable engagement. This web app tracks soft mobility trips (cycling, walking…) and calculates real-time avoided CO₂ emissions compared to combustion engines. A gamified experience designed to turn low-carbon habits into measurable milestones—complete with goal tracking. Link soon ..."
         },
         {
           "id": "card_1793141191586",
@@ -180,6 +180,20 @@
           "details": "Quickly jump to Google Maps coordinates or addresses from any google search with a single click.\n<a href=\"stuff\\Voila_GoToMaps_v0.5.zip\">File</a> | <a href=\"https://www.google.com/search?q=How+to+Install+an+unpacked+extension+%3F\">Help</a>"
         },
         {
+          "id": "card_1793572359152",
+          "title": "NOUVELLE CARTE",
+          "code": "CODE",
+          "desc": "SHADER ISF [ SHARE ] FOR VJING",
+          "type": "SHADER",
+          "status": "ACTIF",
+          "image": "media/shader_strangeAttractorC.png",
+          "visible": false,
+          "full": true,
+          "hasDetail": true,
+          "details": "Can be used in ShaderToy, Touch Designer or Resolume !\nFollow that <a href=\"https://www.shadertoy.com/view/sXGSzV\">Link</a>",
+          "version": "FINAL"
+        },
+        {
           "id": "card_1792769668424",
           "title": "NOUVELLE CARTE",
           "code": "VOILA TOGGLEAI",
@@ -192,6 +206,20 @@
           "full": true,
           "hasDetail": true,
           "details": "Instantly toggle Google AI overviews on or off.\n<a href=\"stuff\\Voila_ToggleAi_0.8.zip\">File</a> | <a href=\"https://www.google.com/search?q=How+to+Install+an+unpacked+extension+%3F\">Help</a>"
+        },
+        {
+          "id": "card_1793560002268",
+          "title": "NOUVELLE CARTE",
+          "code": "SURFACE NURBS",
+          "desc": "SHADER ISF [ SHARE ] FOR VJING",
+          "type": "SHADER",
+          "status": "ACTIF",
+          "image": "media/shader_nurbs.png",
+          "visible": true,
+          "full": true,
+          "hasDetail": true,
+          "version": "FINAL",
+          "details": "Can be used in ShaderToy, Touch Designer or Resolume !\nFollow that <a href=\"https://www.shadertoy.com/view/7XGXRK\">Link</a>"
         },
         {
           "id": "card_1792769674294",
@@ -233,52 +261,57 @@
           "version": "FINAL",
           "full": true,
           "hasDetail": true,
-          "details": "Illustrator / Scriptographer script: interactive Delaunay triangulation and low-poly vector artwork with live color sampling from any image ! <a href=\"stuff/Image2Delaunay_bricemg.zip\" download>Link</a>"
+          "details": "Illustrator / Scriptographer script: interactive Delaunay triangulation and low-poly vector artwork with live color sampling from any image ! <a href=\"stuff/Image2Delaunay_bricemg.zip\" download>Link</a> | <a href=\"https://scriptographer.org/\">Scriptographer</a>"
         },
         {
           "id": "card_1792935960838",
           "title": "NOUVELLE CARTE",
           "code": "META VR DRUMS LEGO",
-          "desc": "DRUM KICK FOR ...",
-          "type": "VR TOOL HACK",
+          "desc": "DRUM KICK FOR PARADIDDLE ( STEAM / META )",
+          "type": "LEGO HACK",
           "status": "ACTIF",
-          "image": "media/_placeholder.png",
+          "image": "media/paraLego_anim.gif",
           "visible": true,
-          "version": "FINAL",
+          "version": "WIP",
           "full": true,
-          "hasDetail": true
+          "hasDetail": true,
+          "details": "DRUM KICK FOR PARADIDDLE ( STEAM / META ) MADE WITH LEGO, ARDUINO & ELECTRONIC CONTROLLER > <A HREF=\"HTTPS://STORE.STEAMPOWERED.COM/APP/685240/PARADIDDLE/\">PARADIDDLE</A>"
         },
         {
           "id": "card_1792936036396",
           "title": "NOUVELLE CARTE",
-          "code": "PORTE TELEPHONE",
-          "desc": "LEGO",
+          "code": "PORTEPHONE LEGO",
+          "desc": "LEGO HACK",
           "type": "LEGO HACK",
           "status": "ACTIF",
-          "image": "media/_placeholder.png",
+          "image": "media/portePhone.gif",
           "visible": true,
           "version": "FINAL",
           "full": true,
-          "hasDetail": true
+          "hasDetail": true,
+          "details": "A simple but useful phone stand, made of Lego, to hold your device anywhere (in portrait or landscape mode ! )"
         }
       ]
     },
     {
       "id": "sec_1792768654366",
       "letter": "C",
-      "title": "SOURCES",
+      "title": "UNCLASSIFIED",
       "visible": true,
       "items": [
         {
           "id": "card_1792768654366",
           "title": "PREMIÈRE CARTE",
-          "code": "CODE",
-          "desc": "Description de la réalisation...",
-          "type": "R&D",
+          "code": "DATAPACK SERIE",
+          "desc": "POSTER",
+          "type": "POSTER",
           "status": "EN COURS",
           "visible": true,
           "full": true,
-          "hasDetail": true
+          "hasDetail": true,
+          "version": "FINAL",
+          "image": "media/free_poster_dataPack.png",
+          "details": "Mesmerizing serie of 3 posters titled 'Datapack' \nFree to download and print : <a href=\"stuff/dataPack_poster.zip\" download>Link</a>"
         }
       ]
     }
@@ -352,6 +385,20 @@
       "showMedia": true
     },
     {
+      "id": "card_1792768980386",
+      "title": "NOUVELLE CARTE",
+      "code": "WEB IS DEAD ...\nLONG LIVE THE AGENT !",
+      "desc": "REFLECTION POSTS AI UX:UI",
+      "type": "DESIGN",
+      "status": "ACTIF",
+      "image": "media/post_ai_agent2.png",
+      "visible": true,
+      "full": true,
+      "hasDetail": true,
+      "version": "FINAL",
+      "details": "A series of posts—part of a broader manifesto titled aUx:aUi—exploring the rise of AI agents and agentic browsers, and their impact on tech, development, and design (ergonomics & interface). <a href=\"https://lnkd.in/p/e3FSxnBr\">Post A</a> | ..."
+    },
+    {
       "id": "card_1792768713294",
       "title": "NOUVELLE CARTE",
       "code": "STEELRISING",
@@ -381,18 +428,18 @@
       "details": "This entire space [ backOffice + frontOffice ] is a clean, modern, zero-dependency portfolio built with native HTML, CSS, and vanilla JavaScript. It incorporates a live WYSIWYG CMS directly inside the browser, allowing real-time customization of text, projects, sections, typography, gradients, and layout without requiring any complex build setup or database. Still In Progress !"
     },
     {
-      "id": "card_1792768980386",
+      "id": "card_1793141109361",
       "title": "NOUVELLE CARTE",
-      "code": "WEB IS DEAD ...\nLONG LIVE THE AGENT !",
-      "desc": "REFLECTION POSTS AI UX:UI",
-      "type": "DESIGN",
+      "code": "WIND RIDER",
+      "desc": "WEBAPP FOR MOBILITY ECO FRIENDLY",
+      "type": "WEBAPP",
       "status": "ACTIF",
-      "image": "media/post_ai_agent2.png",
+      "image": "media/carboRider3.png",
       "visible": true,
+      "version": "V 0.8",
       "full": true,
       "hasDetail": true,
-      "version": "FINAL",
-      "details": "A series of posts—part of a broader manifesto titled aUx:aUi—exploring the rise of AI agents and agentic browsers, and their impact on tech, development, and design (ergonomics & interface). <a href=\"https://lnkd.in/p/e3FSxnBr\">Post A</a> | ..."
+      "details": "Measuring impact to drive sustainable engagement. This web app tracks soft mobility trips (cycling, walking…) and calculates real-time avoided CO₂ emissions compared to combustion engines. A gamified experience designed to turn low-carbon habits into measurable milestones—complete with goal tracking. Link soon ..."
     },
     {
       "id": "card_1792769309440",
@@ -407,20 +454,6 @@
       "full": true,
       "hasDetail": true,
       "details": "A series of posts—part of a broader manifesto—exploring how ( video ) game mechanics can be applied to standard websites and apps to enhance UX:UI ( User onboarding, Data, Task, ... )"
-    },
-    {
-      "id": "card_1793141109361",
-      "title": "NOUVELLE CARTE",
-      "code": "WIND RIDER",
-      "desc": "WEBAPP FOR MOBILITY ECO FRIENDLY",
-      "type": "WEBAPP",
-      "status": "ACTIF",
-      "image": "media/carboRider3.png",
-      "visible": true,
-      "version": "V 0.8",
-      "full": true,
-      "hasDetail": true,
-      "details": "Measuring impact to drive sustainable engagement. This web app tracks soft mobility trips (cycling, walking…) and calculates real-time avoided CO₂ emissions compared to combustion engines. A gamified experience designed to turn low-carbon habits into measurable milestones—complete with goal tracking. Link soon ..."
     },
     {
       "id": "card_1793141191586",
@@ -467,6 +500,20 @@
       "details": "Quickly jump to Google Maps coordinates or addresses from any google search with a single click.\n<a href=\"stuff\\Voila_GoToMaps_v0.5.zip\">File</a> | <a href=\"https://www.google.com/search?q=How+to+Install+an+unpacked+extension+%3F\">Help</a>"
     },
     {
+      "id": "card_1793572359152",
+      "title": "NOUVELLE CARTE",
+      "code": "CODE",
+      "desc": "SHADER ISF [ SHARE ] FOR VJING",
+      "type": "SHADER",
+      "status": "ACTIF",
+      "image": "media/shader_strangeAttractorC.png",
+      "visible": false,
+      "full": true,
+      "hasDetail": true,
+      "details": "Can be used in ShaderToy, Touch Designer or Resolume !\nFollow that <a href=\"https://www.shadertoy.com/view/sXGSzV\">Link</a>",
+      "version": "FINAL"
+    },
+    {
       "id": "card_1792769668424",
       "title": "NOUVELLE CARTE",
       "code": "VOILA TOGGLEAI",
@@ -479,6 +526,20 @@
       "full": true,
       "hasDetail": true,
       "details": "Instantly toggle Google AI overviews on or off.\n<a href=\"stuff\\Voila_ToggleAi_0.8.zip\">File</a> | <a href=\"https://www.google.com/search?q=How+to+Install+an+unpacked+extension+%3F\">Help</a>"
+    },
+    {
+      "id": "card_1793560002268",
+      "title": "NOUVELLE CARTE",
+      "code": "SURFACE NURBS",
+      "desc": "SHADER ISF [ SHARE ] FOR VJING",
+      "type": "SHADER",
+      "status": "ACTIF",
+      "image": "media/shader_nurbs.png",
+      "visible": true,
+      "full": true,
+      "hasDetail": true,
+      "version": "FINAL",
+      "details": "Can be used in ShaderToy, Touch Designer or Resolume !\nFollow that <a href=\"https://www.shadertoy.com/view/7XGXRK\">Link</a>"
     },
     {
       "id": "card_1792769674294",
@@ -520,33 +581,35 @@
       "version": "FINAL",
       "full": true,
       "hasDetail": true,
-      "details": "Illustrator / Scriptographer script: interactive Delaunay triangulation and low-poly vector artwork with live color sampling from any image ! <a href=\"stuff/Image2Delaunay_bricemg.zip\" download>Link</a>"
+      "details": "Illustrator / Scriptographer script: interactive Delaunay triangulation and low-poly vector artwork with live color sampling from any image ! <a href=\"stuff/Image2Delaunay_bricemg.zip\" download>Link</a> | <a href=\"https://scriptographer.org/\">Scriptographer</a>"
     },
     {
       "id": "card_1792935960838",
       "title": "NOUVELLE CARTE",
       "code": "META VR DRUMS LEGO",
-      "desc": "DRUM KICK FOR ...",
-      "type": "VR TOOL HACK",
+      "desc": "DRUM KICK FOR PARADIDDLE ( STEAM / META )",
+      "type": "LEGO HACK",
       "status": "ACTIF",
-      "image": "media/_placeholder.png",
+      "image": "media/paraLego_anim.gif",
       "visible": true,
-      "version": "FINAL",
+      "version": "WIP",
       "full": true,
-      "hasDetail": true
+      "hasDetail": true,
+      "details": "DRUM KICK FOR PARADIDDLE ( STEAM / META ) MADE WITH LEGO, ARDUINO & ELECTRONIC CONTROLLER > <A HREF=\"HTTPS://STORE.STEAMPOWERED.COM/APP/685240/PARADIDDLE/\">PARADIDDLE</A>"
     },
     {
       "id": "card_1792936036396",
       "title": "NOUVELLE CARTE",
-      "code": "PORTE TELEPHONE",
-      "desc": "LEGO",
+      "code": "PORTEPHONE LEGO",
+      "desc": "LEGO HACK",
       "type": "LEGO HACK",
       "status": "ACTIF",
-      "image": "media/_placeholder.png",
+      "image": "media/portePhone.gif",
       "visible": true,
       "version": "FINAL",
       "full": true,
-      "hasDetail": true
+      "hasDetail": true,
+      "details": "A simple but useful phone stand, made of Lego, to hold your device anywhere (in portrait or landscape mode ! )"
     }
   ]
 }
